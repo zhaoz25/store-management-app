@@ -16,6 +16,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".store.manager.MainManagementActivity" />
+        <activity android:name=".store.manager.CreateAccountActivity" />
+        <activity android:name=".store.manager.ShiftActivity" />
+        <activity android:name=".store.manager.EmployeeManagementActivity" />
+        <activity android:name=".store.manager.EmployeeActivity" />
+        <activity
+            android:name=".store.manager.TimeKeepingActivity"
+            android:label="Bảng chấm công" />
+        <activity
+            android:name=".store.manager.ShiftDetailActivity"
+            android:label="Ca làm việc" />
+        <activity
+            android:name=".store.manager.RevenueActivity"
+            android:label="@string/title_activity_revenue"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

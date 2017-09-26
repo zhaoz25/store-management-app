@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/common_google_signin_btn_text_dark_disabled"
     android:orientation="vertical"
     android:weightSum="1"
     tools:context="com.example.dellcorei3.storemanagement.MainActivity">
@@ -17,7 +17,7 @@
         android:freezesText="false"
         android:gravity="center_horizontal"
         android:text="Đăng nhập"
-        android:textColor="@android:color/background_light"
+        android:textColor="@android:color/background_dark"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -26,27 +26,36 @@
         app:layout_constraintVertical_bias="0.032" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Email:"
         android:inputType="textPersonName"
-        android:textColor="@android:color/background_light" />
+        android:textColor="@android:color/background_dark" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/etPass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Mật khẩu:"
         android:inputType="textPersonName"
-        android:textColor="@android:color/background_light" />
+        android:password="true"
+        android:textColor="@android:color/background_dark" />
+
+    <CheckBox
+        android:id="@+id/cbSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lưu mật khẩu"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btEmployee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -57,7 +66,7 @@
         android:textSize="22sp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btManager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
