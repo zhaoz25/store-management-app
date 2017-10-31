@@ -22,7 +22,7 @@ public class TimeFormat {
 
 
     public static String convertTimeStampToDate(Map<String,Object> map){
-        SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Long timestamp = (Long)map.get("timestamp");
 
         String date = sfd.format(new Date(timestamp));
@@ -67,6 +67,10 @@ public class TimeFormat {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             Date date = sdf.parse(myDate);
             millis = date.getTime();
+
+            String date2 = sdf.format(new Date(millis));
+            Log.d("mili",millis+"");
+            Log.d("date2",date2);
         } catch (ParseException e) {
             Log.d("error", e.getMessage());
         }

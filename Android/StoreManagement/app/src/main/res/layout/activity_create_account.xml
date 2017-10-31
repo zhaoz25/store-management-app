@@ -8,16 +8,6 @@
     android:orientation="vertical"
     tools:context="com.example.dellcorei3.storemanagement.store.manager.CreateAccountActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="TẠO TÀI KHOẢN NHÂN VIÊN"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
     <EditText
         android:id="@+id/etCreateEmail"
         android:layout_width="match_parent"
@@ -81,15 +71,21 @@
 
     </RadioGroup>
 
-    <Button
-        android:id="@+id/btCreate"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="#2bce4c"
-        android:text="Tạo tài khoản"
-        android:textColor="@android:color/background_light"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            android:background="#2bce4c"
+            android:text="Tạo tài khoản"
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
 </LinearLayout>

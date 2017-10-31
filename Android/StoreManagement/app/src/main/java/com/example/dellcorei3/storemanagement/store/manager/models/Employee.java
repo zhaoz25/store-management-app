@@ -1,5 +1,6 @@
 package com.example.dellcorei3.storemanagement.store.manager.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * Created by dellcorei3 on 9/17/2017.
  */
 
-public class Employee {
+public class Employee implements Serializable{
     public String id;
     public String email;
     public String lastName,firstName;
@@ -19,7 +20,8 @@ public class Employee {
     public String fromDate,toDate;
 
     public Employee() {
-
+        lastName = "";
+        firstName = "";
     }
 
     public Employee(String email,String firstName,String lastName,String position,int state) {
@@ -33,5 +35,9 @@ public class Employee {
         toDate = "";
         this.position = position;
         this.state = state;
+    }
+
+    public String getName(){
+        return firstName+" " + lastName;
     }
 }

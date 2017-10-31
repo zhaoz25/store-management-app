@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dellcorei3.storemanagement">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,28 +11,46 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:label="QUẢN LÝ BÁN HÀNG"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".store.manager.MainManagementActivity" />
-        <activity android:name=".store.manager.CreateAccountActivity" />
-        <activity android:name=".store.manager.ShiftActivity" />
-        <activity android:name=".store.manager.EmployeeManagementActivity" />
-        <activity android:name=".store.manager.EmployeeActivity" />
+        <activity android:name=".store.manager.MainManagementActivity"
+            android:label="QUẢN LÝ BÁN HÀNG"/>
+        <activity android:name=".store.manager.CreateAccountActivity" android:screenOrientation="portrait"
+            android:label="TẠO TÀI KHOẢN NHÂN VIÊN"/>
+        <activity android:name=".store.manager.ShiftActivity"
+            android:label="QUẢN LÝ CA LÀM VIỆC"/>
+        <activity android:name=".store.manager.EmployeeManagementActivity"
+            android:label="QUẢN LÝ NHÂN VIÊN"/>
+        <activity android:name=".store.manager.EmployeeActivity"
+            android:label="THÔNG TIN NHÂN VIÊN"/>
         <activity
             android:name=".store.manager.TimeKeepingActivity"
-            android:label="Bảng chấm công" />
+            android:label="BẢNG CHẤM CÔNG" />
         <activity
             android:name=".store.manager.ShiftDetailActivity"
             android:label="Ca làm việc" />
         <activity
             android:name=".store.manager.RevenueActivity"
-            android:label="@string/title_activity_revenue"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="QUẢN LÝ DOANH THU"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".store.manager.TKDetailsActivity"
+            android:label="QUẢN LÝ BÁN HÀNG"/>
+        <activity android:name=".store.manager.EmployeeEfficientActivity"
+            android:label="HIỆU SUẤT NHÂN VIÊN"/>
+        <activity android:name=".store.manager.ProductStatisticActivity"
+            android:label="THỐNG KÊ SẢN PHẨM"/>
+        <activity android:name=".store.manager.BillDetailsActivity"
+            android:label="CHI TIẾT HÓA ĐƠN"/>
+        <activity android:name=".store.manager.RevenueFTimeActivity"
+            android:label="DOANH THU THEO GIỜ"></activity>
     </application>
 
 </manifest>

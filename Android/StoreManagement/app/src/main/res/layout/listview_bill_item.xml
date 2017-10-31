@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvBillDTen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="5"
+        android:maxWidth="120dp"
+        android:minWidth="120dp"
+        android:text="TextView"
+        android:textColor="#154a8c"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/tvBillDSoluong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="TextView"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/tvBillDTongTien"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="right"
+        android:maxWidth="100dp"
+        android:minWidth="100dp"
+        android:text="TextView"
+        android:textColor="#9c5610"
+        android:textSize="18dp" />
+</LinearLayout>

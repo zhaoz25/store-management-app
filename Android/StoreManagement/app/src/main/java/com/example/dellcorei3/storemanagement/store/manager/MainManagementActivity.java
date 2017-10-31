@@ -1,25 +1,16 @@
 package com.example.dellcorei3.storemanagement.store.manager;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.example.dellcorei3.storemanagement.R;
-import com.example.dellcorei3.storemanagement.store.manager.models.Shift;
-import com.google.firebase.database.ServerValue;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 
 public class MainManagementActivity extends AppCompatActivity {
 
-    ImageButton btCreateAccount,btShift,btEmployeeManagement,btRevenue;
+    ImageButton btCreateAccount,btShift,btEmployeeManagement,btRevenue,btProduct,btRevenueFTime;
 
 
     @Override
@@ -62,6 +53,20 @@ public class MainManagementActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
+        btProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainManagementActivity.this,ProductStatisticActivity.class);
+                startActivity(it);
+            }
+        });
+        btRevenueFTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainManagementActivity.this,RevenueFTimeActivity.class);
+                startActivity(it);
+            }
+        });
     }
 
     private void addControls(){
@@ -69,5 +74,7 @@ public class MainManagementActivity extends AppCompatActivity {
         btShift = (ImageButton)findViewById(R.id.btShift);
         btEmployeeManagement = (ImageButton)findViewById(R.id.btEmployeeManagement);
         btRevenue = (ImageButton)findViewById(R.id.btRevenue);
+        btProduct = (ImageButton)findViewById(R.id.btStatisticProduct);
+        btRevenueFTime = (ImageButton)findViewById(R.id.btRevenueFTime);
     }
 }

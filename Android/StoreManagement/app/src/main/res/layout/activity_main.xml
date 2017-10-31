@@ -4,76 +4,105 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_google_signin_btn_text_dark_disabled"
+    android:background="#fa40958c"
     android:orientation="vertical"
     android:weightSum="1"
     tools:context="com.example.dellcorei3.storemanagement.MainActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:freezesText="false"
+        android:layout_marginTop="30dp"
         android:gravity="center_horizontal"
-        android:text="Đăng nhập"
-        android:textColor="@android:color/background_dark"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.032" />
+        android:text="Don't wait. Login now!"
+        android:textColor="@android:color/background_light"
+        android:textSize="22dp" />
 
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="#eefbfa"
         android:ems="10"
         android:hint="Email:"
         android:inputType="textPersonName"
-        android:textColor="@android:color/background_dark" />
+        android:minHeight="30dp"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/etPass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
+        android:background="#eefbfa"
         android:ems="10"
         android:hint="Mật khẩu:"
         android:inputType="textPersonName"
+        android:minHeight="30dp"
         android:password="true"
-        android:textColor="@android:color/background_dark" />
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rdLogInEmployee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nhân viên"
+            android:textColor="@android:color/background_light"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rdLogInManager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Chủ cửa hàng"
+            android:textColor="@android:color/background_light"
+            android:textSize="16sp" />
+    </RadioGroup>
 
     <CheckBox
         android:id="@+id/cbSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
         android:text="Lưu mật khẩu"
-        android:textColor="@android:color/background_dark"
-        android:textSize="18sp" />
+        android:textColor="@android:color/background_light"
+        android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btEmployee"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:width="200dp"
-        android:background="#d6f9c8"
-        android:text="Nhân Viên"
-        android:textSize="22sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btManager"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:width="200dp"
-        android:background="#f7cfd0"
-        android:text="Chủ cửa hàng"
-        android:textSize="22sp" />
+        <Button
+            android:id="@+id/btLogIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#20766c"
+            android:text="ĐĂNG NHẬP"
+            android:textColor="@android:color/background_light"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
 </LinearLayout>

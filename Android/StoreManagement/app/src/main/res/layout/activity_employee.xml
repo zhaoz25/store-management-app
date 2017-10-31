@@ -7,15 +7,6 @@
     android:orientation="vertical"
     tools:context="com.example.dellcorei3.storemanagement.store.manager.EmployeeActivity">
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Thông tin nhân viên"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,9 +15,7 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/btEmployeeUpdate"
-            android:layout_marginTop="10dp"
-            android:background="#baf0ea">
+            android:layout_above="@+id/btEmployeeUpdate">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -264,7 +253,7 @@
                         android:inputType="textMultiLine"
                         android:maxLines="3"
                         android:minLines="1"
-                        android:text="dgfjkl dfgdlkj fdkgjfdl gfdkgjldf gdklgjri figojdf gfdjoifgj fghgf gfhfgh hfgh fgh fghfgh  fhfgh fgghfgh hgfhfg fgh fgh fg ghgf" />
+                        android:text="" />
 
                 </LinearLayout>
 
@@ -285,8 +274,7 @@
                         android:id="@+id/tgButtonState"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/background_light" />
+                        android:layout_weight="1" />
 
                 </LinearLayout>
 
