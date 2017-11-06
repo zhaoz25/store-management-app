@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
+
     <application
         android:allowBackup="true"
         android:debuggable="true"
@@ -14,7 +15,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+
+        <activity android:name=".employee.LonginAndCheckin.Login"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
+            >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".employee.Main_lauout_Bill"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
@@ -24,18 +36,7 @@
         <activity android:name=".employee.Main_Layout_Bill_2"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
-            >
-
-        </activity>
-        <activity android:name=".employee.LonginAndCheckin.Login"
-            android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        >
         </activity>
         <activity android:name=".employee.LonginAndCheckin.Checkin"
             android:label="Thông Tin"
@@ -43,6 +44,36 @@
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
             >
         </activity>
+        <activity android:name=".store.manager.MainManagementActivity"
+            android:label="QUẢN LÝ BÁN HÀNG"/>
+        <activity android:name=".store.manager.CreateAccountActivity" android:screenOrientation="portrait"
+            android:label="TẠO TÀI KHOẢN NHÂN VIÊN"/>
+        <activity android:name=".store.manager.ShiftActivity"
+            android:label="QUẢN LÝ CA LÀM VIỆC"/>
+        <activity android:name=".store.manager.EmployeeManagementActivity"
+            android:label="QUẢN LÝ NHÂN VIÊN"/>
+        <activity android:name=".store.manager.EmployeeActivity"
+            android:label="THÔNG TIN NHÂN VIÊN"/>
+        <activity
+            android:name=".store.manager.TimeKeepingActivity"
+            android:label="BẢNG CHẤM CÔNG" />
+        <activity
+            android:name=".store.manager.ShiftDetailActivity"
+            android:label="Ca làm việc" />
+        <activity
+            android:name=".store.manager.RevenueActivity"
+            android:label="QUẢN LÝ DOANH THU"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".store.manager.TKDetailsActivity"
+            android:label="QUẢN LÝ BÁN HÀNG"/>
+        <activity android:name=".store.manager.EmployeeEfficientActivity"
+            android:label="HIỆU SUẤT NHÂN VIÊN"/>
+        <activity android:name=".store.manager.ProductStatisticActivity"
+            android:label="THỐNG KÊ SẢN PHẨM"/>
+        <activity android:name=".store.manager.BillDetailsActivity"
+            android:label="CHI TIẾT HÓA ĐƠN"/>
+        <activity android:name=".store.manager.RevenueFTimeActivity"
+            android:label="DOANH THU THEO GIỜ"></activity>
     </application>
 
 </manifest>
