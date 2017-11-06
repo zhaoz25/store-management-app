@@ -7,7 +7,7 @@ package com.example.dellcorei3.storemanagement.employee.LonginAndCheckin;
 public class Nhanvien_checkin {
     public String ipaddress,nhanvien_id,id,email,gio,key;
     public String address,firstName,lastName,fromDate,position;
-    public Long gender;
+    public Long gender,state;
     public Nhanvien_checkin() {
     }
 

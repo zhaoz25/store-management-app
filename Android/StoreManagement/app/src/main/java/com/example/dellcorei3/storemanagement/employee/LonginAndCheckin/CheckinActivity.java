@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Checkin extends AppCompatActivity {
+public class CheckinActivity extends AppCompatActivity {
     TextView txt_show_nv;
     DatabaseReference mdata;
     Nhanvien_checkin nhanvien_checkin;
@@ -72,7 +72,7 @@ public class Checkin extends AppCompatActivity {
                 createorder();
                 break;
             case R.id.action_logout:
-                Intent i = new Intent(Checkin.this,Login.class);
+                Intent i = new Intent(CheckinActivity.this,Login.class);
                 startActivity(i);
                 break;
         }
@@ -210,9 +210,10 @@ public class Checkin extends AppCompatActivity {
                 if (getemail.equals( nhanvien_checkin.email)){
                     nhanvien_id=nhanvien_checkin.id;
                     String tennv = nhanvien_checkin.lastName;
-                    Intent i = new Intent(Checkin.this, Main_lauout_Bill.class);
+                    Intent i = new Intent(CheckinActivity.this, Main_lauout_Bill.class);
                     i.putExtra("nhanvien_id",nhanvien_id);
                     i.putExtra("lastname",tennv);
+                    i.putExtra("email",nhanvien_checkin.email);
                     startActivity(i);
 
                 }
@@ -252,7 +253,7 @@ public class Checkin extends AppCompatActivity {
        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"+"\n"+" HH:mm:ss");
        Date date = new Date();
        Log.d("asd",dateFormat.format(date));
-       Toast.makeText(Checkin.this,dateFormat.format(date),Toast.LENGTH_LONG).show();
+       Toast.makeText(CheckinActivity.this,dateFormat.format(date),Toast.LENGTH_LONG).show();
 
    }
 

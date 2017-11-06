@@ -16,21 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".employee.LonginAndCheckin.Login"
-            android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
-            >
-
+        <activity
+            android:name=".MainActivity"
+            android:label="QUẢN LÝ BÁN HÀNG"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".employee.Main_lauout_Bill"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
-            >
+        >
 
         </activity>
         <activity android:name=".employee.Main_Layout_Bill_2"
@@ -38,7 +38,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
         >
         </activity>
-        <activity android:name=".employee.LonginAndCheckin.Checkin"
+        <activity android:name=".employee.LonginAndCheckin.CheckinActivity"
             android:label="Thông Tin"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"

@@ -72,7 +72,7 @@ public class Login extends Activity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                            if (task.isSuccessful()) {
-                               Intent i = new Intent(Login.this, Checkin.class);
+                               Intent i = new Intent(Login.this, CheckinActivity.class);
                                i.putExtra("Email", email.toString());
                                startActivity(i);
                                if (!checkBox.isChecked()) {

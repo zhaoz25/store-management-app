@@ -22,6 +22,9 @@ import com.example.dellcorei3.storemanagement.employee.JavaClass.Ban;
 import com.example.dellcorei3.storemanagement.employee.JavaClass.Hoadon;
 import com.example.dellcorei3.storemanagement.employee.JavaClass.Nhan_vien;
 import com.example.dellcorei3.storemanagement.employee.JavaClass.Show_hoadon;
+import com.example.dellcorei3.storemanagement.employee.LonginAndCheckin.Nhanvien_checkin;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,6 +66,8 @@ public class Main_lauout_Bill extends Activity {
     String keyban;
     boolean ischoose1 = false,ischoose2 = true;
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +77,7 @@ public class Main_lauout_Bill extends Activity {
         thamchieu();
 
         mdata = FirebaseDatabase.getInstance().getReference();
-
+        mAuth = FirebaseAuth.getInstance();
 
 
 
@@ -277,6 +282,41 @@ public class Main_lauout_Bill extends Activity {
                 }
             });
         }
+        // kiểm tra tài khoản nhân vien
+        mdata.child("nhanvien").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Nhanvien_checkin nv = dataSnapshot.getValue(Nhanvien_checkin.class);
+                Bundle b = getIntent().getExtras();
+                if(nv.email.equals(b.get("email"))==true){
+                    if(nv.state == 0){
+                        Log.d("chua",mAuth.getCurrentUser().toString());
+                        FirebaseAuth.getInstance().signOut();
+                        Toast.makeText(Main_lauout_Bill.this,"Tài khoản của bạn đã bị khóa",Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

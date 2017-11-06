@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="2"
-    tools:context="com.example.dellcorei3.storemanagement.employee.LonginAndCheckin.Checkin"
+    tools:context="com.example.dellcorei3.storemanagement.employee.LonginAndCheckin.CheckinActivity"
     android:orientation="vertical"
     >
 
