@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "12863387758",
+    "firebase_url": "https://storemanagementapp-fc745.firebaseio.com",
+    "project_id": "storemanagementapp-fc745",
+    "storage_bucket": "storemanagementapp-fc745.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12863387758:android:f03a9a07af9fe645",
+        "android_client_info": {
+          "package_name": "com.example.dellcorei3.storemanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "12863387758-u1ph72qhvdott61tl540nvj123rtb3g4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMz4SQpc0MvHEyG5E5BL4ktlxvHy3qAms"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

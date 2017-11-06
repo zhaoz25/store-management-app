@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bạn đã chọn : "
+
+                android:textAppearance="@style/MyTexrStyle"
+                />
+                <TextView
+                    android:id="@+id/txt_id_tenmonandachon"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/MyTexrStyle"
+                    />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            >
+            <TextView
+               android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số lượng "
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@style/MyTexrStyle"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:weightSum="3"
+                >
+                <TextView
+                    android:gravity="center"
+                    android:id="@+id/bt_id_giamsoluong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="-"
+                    android:textSize="64dp"
+                    android:textStyle="bold"
+
+                    />
+                <EditText
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:id="@+id/txt_id_number"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:inputType="number"
+                    android:textAppearance="@style/MyTexrStyle"
+
+                    />
+                <TextView
+                    android:gravity="center"
+                    android:id="@+id/bt_id_tangsoluong"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:textSize="50dp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="5dp"
+            >
+
+
+
+            <Button
+                    android:id="@+id/bt_id_huymonandachon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hủy"
+                    android:background="#FFA726"
+                    />
+                <Button
+                    android:id="@+id/bt_id_xacnhanmonandachon"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xác Nhận"
+                    android:background="#4FC3F7"
+                    />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
