@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -702,9 +703,9 @@ public class Main_Layout_Bill_2 extends Activity {
                         getkey = bundle.getString("Key");
                         getkeyban = bundle.getString("Ban");
 
-                            mdata.child(Namehoadonchitiet).child(getkey).removeValue();
-                            mdata.child("Hoadon").child(getkey).removeValue();
-                            mdata.child("ban").child(getkeyban).child("choose").removeValue();
+                        mdata.child(Namehoadonchitiet).child(getkey).removeValue();
+                        mdata.child("Hoadon").child(getkey).removeValue();
+                        mdata.child("ban").child(getkeyban).child("choose").removeValue();
                         dialog.dismiss();
                         finish();
 

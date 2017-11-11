@@ -5,10 +5,10 @@ package com.example.dellcorei3.storemanagement.employee.JavaClass;
  */
 
 public class Show_hoadon {
-    public String ban,nhanvien_id,tennv,trangthai="",key,ten="";
+    public String ban,nhanvien_id,tennv="",trangthai="",key,ten="";
 
     public Show_hoadon() {
-
+        nhanvien_id="";
 
     }
 

@@ -32,7 +32,7 @@ public class CheckinActivity extends AppCompatActivity {
     TextView txt_show_nv;
     DatabaseReference mdata;
     Nhanvien_checkin nhanvien_checkin;
-   String getkey;
+    String getkey;
     Bundle bundle;
     String nhanvien_id;
     String getemail;
@@ -160,9 +160,10 @@ public class CheckinActivity extends AppCompatActivity {
                 getemail = bundle.getString("Email");
                 nhanvien_checkin = new Nhanvien_checkin();
                 nhanvien_checkin = dataSnapshot.getValue(Nhanvien_checkin.class);
+                nhanvien_checkin.key = dataSnapshot.getKey();
 
                 if (getemail.equals( nhanvien_checkin.email)) {
-                    nhanvien_id=nhanvien_checkin.id;
+                    nhanvien_id=nhanvien_checkin.key;
                     Map<String,Object> checkoutData=new HashMap<>();
                     checkoutData.put("timestamp", ServerValue.TIMESTAMP);
 
@@ -207,11 +208,12 @@ public class CheckinActivity extends AppCompatActivity {
                 getemail = bundle.getString("Email");
                 nhanvien_checkin = new Nhanvien_checkin();
                 nhanvien_checkin = dataSnapshot.getValue(Nhanvien_checkin.class);
+                nhanvien_checkin.key = dataSnapshot.getKey();
+
                 if (getemail.equals( nhanvien_checkin.email)){
-                    nhanvien_id=nhanvien_checkin.id;
                     String tennv = nhanvien_checkin.lastName;
                     Intent i = new Intent(CheckinActivity.this, Main_lauout_Bill.class);
-                    i.putExtra("nhanvien_id",nhanvien_id);
+                    i.putExtra("nhanvien_id",nhanvien_checkin.key);
                     i.putExtra("lastname",tennv);
                     i.putExtra("email",nhanvien_checkin.email);
                     startActivity(i);

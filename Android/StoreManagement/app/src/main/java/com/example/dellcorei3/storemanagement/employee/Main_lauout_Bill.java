@@ -156,15 +156,17 @@ public class Main_lauout_Bill extends Activity {
                         }else {
                             String nhanvien_id = bundle.getString("nhanvien_id");
 
-                            hoadon = new Hoadon(nhanvien_id, banDaChon.key);
+                            hoadon = new Hoadon(nhanvien_id, banDaChon.key,"");
                             setkey = mdata.push().getKey();
                             Map<String, Object> checkoutData = new HashMap<>();
                             checkoutData.put("timestamp", ServerValue.TIMESTAMP);
                             keyban = banDaChon.key.toString();
                             Log.d("keyban", keyban);
+
                             mdata.child("ban").child(keyban).child("choose").setValue("1");
+                            hoadon.ngay = checkoutData;
                             mdata.child("Hoadon").child(setkey).setValue(hoadon);
-                            mdata.child("Hoadon").child(setkey).child("ngay").setValue(checkoutData);
+                           // mdata.child("Hoadon").child(setkey).child("ngay").setValue(checkoutData);
 
 
                             Intent layoutBill_2 = new Intent(Main_lauout_Bill.this, Main_Layout_Bill_2.class);
@@ -172,6 +174,7 @@ public class Main_lauout_Bill extends Activity {
 
                             layoutBill_2.putExtra("Vitri", banDaChon.vitri.toString());
                             layoutBill_2.putExtra("Chuoikeyid", nhanvien_id);
+                            Log.d("nv1",nhanvien_id);
                             layoutBill_2.putExtra("Key", setkey.toString());
                             startActivityForResult(layoutBill_2, 1);
                             dialog.dismiss();
@@ -436,7 +439,14 @@ public class Main_lauout_Bill extends Activity {
 //
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Show_hoadon hd = dataSnapshot.getValue(Show_hoadon.class);
+                hd.key = dataSnapshot.getKey();
+                for (int i = 0; i < arrayshowhoadon.size(); i++) {
+                    if (arrayshowhoadon.get(i).key.equals(dataSnapshot.getKey())) {
+                        arrayshowhoadon.remove(i);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override
