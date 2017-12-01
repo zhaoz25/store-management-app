@@ -2,6 +2,7 @@ package com.example.dellcorei3.storemanagement.employee.CustomListview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,14 +58,17 @@ public class CT_hoadonAdapter extends ArrayAdapter<Show_hoadon> {
         ct_billHolder.txt_ban.setText(pf.ten.toString());
         ct_billHolder.txt_nhanvien.setText(pf.tennv.toString());
         if(pf.trangthai.equals("chothanhtoan")){
-          tt  = "Chờ thanh toán";
+            tt  = "Chờ thanh toán";
             ct_billHolder.txt_trangthai.setText(tt);
+            ct_billHolder.txt_trangthai.setBackgroundColor(Color.parseColor("#FA5858"));
         }else if(pf.trangthai.equals("chuaphucvu")){
             tt = "Chưa phục vụ";
             ct_billHolder.txt_trangthai.setText(tt);
+            ct_billHolder.txt_trangthai.setBackgroundColor(Color.parseColor("#FFBF00"));
         }else if (pf.trangthai.equals("phucvu")){
             tt="Phục vụ";
             ct_billHolder.txt_trangthai.setText(tt);
+            ct_billHolder.txt_trangthai.setBackgroundColor(Color.parseColor("#00FF80"));
         }
 
 
