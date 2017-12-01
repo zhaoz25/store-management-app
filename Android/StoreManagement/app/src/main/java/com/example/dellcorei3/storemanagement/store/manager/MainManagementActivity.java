@@ -3,10 +3,14 @@ package com.example.dellcorei3.storemanagement.store.manager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.example.dellcorei3.storemanagement.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainManagementActivity extends AppCompatActivity {
 
@@ -67,6 +71,29 @@ public class MainManagementActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.option_main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.optionMainInfo:
+                Intent it = new Intent(MainManagementActivity.this,StoreInfomationActivity.class);
+                startActivity(it);
+
+                break;
+            case R.id.optionMainLogout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void addControls(){

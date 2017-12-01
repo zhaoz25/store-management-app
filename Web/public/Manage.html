@@ -1,0 +1,117 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thông tin nhân viên</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="css/Manage.css">
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDYXG2nw4TKGv6j0pwtf_cA1d6iZjWhGa8",
+    authDomain: "storemanagementapp-fc745.firebaseapp.com",
+    databaseURL: "https://storemanagementapp-fc745.firebaseio.com",
+    projectId: "storemanagementapp-fc745",
+    storageBucket: "storemanagementapp-fc745.appspot.com",
+    messagingSenderId: "12863387758"
+  };
+  firebase.initializeApp(config);
+	var user = sessionStorage.getItem('email');	
+	
+	var ArrayNV = [];
+	var ref = firebase.database().ref('nhanvien/');
+        ref.on('child_added', function(data) {
+            var childKey = data.key;
+            var childData = data.val();		
+			// doi tuong
+			var NV = {
+				key   : childKey,
+				address : childData.address,
+				email : childData.email,
+				gender : childData.gender,
+				position :childData.position,
+				firstName:childData.firstName,
+				lastName:childData.lastName,
+				shiftId:childData.shiftId,
+				fromDate:childData.fromDate,
+				shiftName:"",
+				bd:"",
+				kt:""
+			};
+			var chucvu="";
+			if(NV.position == "thungan"){chucvu = "Thu ngân";}
+			var gt= "";
+			if(NV.gender == "1"){gt="Nữ";}else{gt = "Nam";}
+			var calamviec="";
+			var giobd="";
+			var giokt="";
+			var ref = firebase.database().ref('calamviec/'+NV.shiftId);
+			ref.once('value').then(function(snapshot) {
+				calamviec = snapshot.val().shiftName;
+				NV.shiftName = calamviec;
+				/*giobd = snapshot.val().from;
+				NV.shiftName = calamviec;
+				calamviec = snapshot.val().shiftName;
+				NV.shiftName = calamviec;*/
+				
+				if(NV.email == user){
+					ArrayNV.push(NV);
+					document.getElementById("content").innerHTML += "<tr id='"+NV.key+"'><td>"+"<B>Họ và tên: </B>"+"</td><td>"+NV.firstName+" "+NV.lastName+"</td></tr>"
+														+"<tr id='"+NV.key+"'><td>"+"<B>Giới tính: </B>"+"</td><td>"+gt+"</td></tr>"
+														+"<tr id='"+NV.key+"'><td>"+"<B>Email: </B>"+"</td><td>"+NV.email+"</td></tr>"
+														+"<tr id='"+NV.key+"'><td>"+"<B>Địa chỉ: </B>"+"</td><td>"+NV.address+"</td></tr>"
+														+"<tr id='"+NV.key+"'><td>"+"<B>Chức vụ: </B>"+"</td><td>"+chucvu+"</td></tr>"
+														+"<tr id='"+NV.key+"'><td>"+"<B>Ngày bắt đầu: </B>"+"</td><td>"+NV.fromDate+"</td></tr>"
+														+"<tr id='"+NV.key+"'><td>"+"<B>Ca làm việc: </B>"+"</td><td>"+calamviec+"</td></tr>";    
+				}
+			});
+		});
+		
+
+  	firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+  } else {
+	//alert("Vui lòng đăng nhập!");
+	window.location="index.html";
+  }
+});
+	var email = sessionStorage.getItem('email');
+	document.getElementById("name").innerHTML ="<h4>"+ email +"</h4>"
+</script>
+</head>
+<header>
+	<div>
+		<li class="li2"><i class="fa fa-user"> Thông tin nhân viên</i></li>
+		<a href="QLBan.html"><i class="fa fa-laptop fa-border"> Quản lý bàn</i></a>
+		<a href="QLMenu.html"><i class="fa fa-coffee fa-border"> Quản lý thực đơn</i></a>
+		<a href="QLNhomMenu.html"><i class="fa fa-book  fa-border"> Quản lý loại thực đơn</i></a>
+		<a href="QLHoaDon.html"><i class="fa fa-bars  fa-border"> Quản lý hóa đơn</i></a>
+		<button onclick="logout()"><i class="fa fa-times fa-border"> Đăng xuất</i></button>
+	</div>
+</header>
+<main>
+<h1><i><center>Thông tin nhân viên</center></i></h1>
+	<div style="width:40%;height:auto;  margin-left:300px;">
+	<div style="width:100%;">
+		<table id="content" border="0" cellpadding="5" onclick="tableClicked()"></table>
+	</div>
+	</div>
+</main>
+<script>
+	function logout(){
+			firebase.auth().signOut().then(function() {
+			window.location="index.html";
+		}).catch(function(error) {
+			var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+			return false;
+		});
+	}
+</script>
+</body>
+</html>

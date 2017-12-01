@@ -1,0 +1,274 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Quản lý bàn</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"  href="css/QLBan.css">
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDYXG2nw4TKGv6j0pwtf_cA1d6iZjWhGa8",
+    authDomain: "storemanagementapp-fc745.firebaseapp.com",
+    databaseURL: "https://storemanagementapp-fc745.firebaseio.com",
+    projectId: "storemanagementapp-fc745",
+    storageBucket: "storemanagementapp-fc745.appspot.com",
+    messagingSenderId: "12863387758"
+  };
+  firebase.initializeApp(config);
+  
+  
+  var ArrayBan = [];
+  var ref = firebase.database().ref('ban/');
+                ref.on('child_added', function(data) {
+                        var childKey = data.key;
+                        var childData = data.val();
+						
+						var BAN = {
+							key   : childKey,
+							tenban : childData.tenban,
+							vitri : childData.vitri
+						};
+						ArrayBan.push(BAN);
+						document.getElementById("content").innerHTML += "<tr id='"+BAN.key+"'> <td class='likertCells'>"+BAN.tenban + "</td> <td class='likertCells'>"
+																		+BAN.vitri+"</td></tr>"               
+                    });
+		  var likertCells = document.querySelectorAll('.likertCells'); // Mind the dot!
+        for (var i = 0; i < likertCells.length; i++) {
+            likertCells[i].setAttribute('onclick', 'checkRadioAndHighlight(this)')
+        }
+
+        function checkRadioAndHighlight(caller) {
+            var theKids = caller.childNodes;
+            for (var j = 0; j < theKids.length; j++) {
+                if (theKids[j].type == 'radio') theKids[j].checked = true;
+            }
+            var theSiblings = caller.parentNode.childNodes;
+            for (var k = 0; k < theSiblings.length; k++) {
+                if (theSiblings[k].tagName == 'TD') // The DOM returns tagNames in uppercase!
+                theSiblings[k].style.backgroundColor = '';
+            }
+            caller.style.backgroundColor = '#D3D3D3';
+        }
+					
+	// sự kiện khi database đc update
+	ref.on('child_changed', function(data) {
+		var childKey = data.key;
+        var childData = data.val();
+		// doi tuong
+		var BAN = {
+			key   : childKey,
+			tenban : childData.tenban,
+			vitri : childData.vitri
+		};
+			var i;
+			for(i = 0;i<ArrayBan.length;i++){
+				if(ArrayBan[i].key == BAN.key){
+					ArrayBan[i] = BAN;
+				}
+			}
+			// cập nhật row
+			document.getElementById(BAN.key).innerHTML = "<tr id='"+BAN.key +"'> <td>"+BAN.tenban + "</td> <td>"
+																		+BAN.vitri+"</td></tr>";
+		});	 
+	
+	// sự kiện khi data deleted
+	ref.on('child_removed', function(data) {
+		var childKey = data.key;
+		// xóa array element
+		var i;
+		for(i = 0;i<ArrayBan.length;i++){
+			if(ArrayBan[i].key == childKey){
+				ArrayBan.splice(i,1);
+			}
+		}
+		//xoa row table
+		document.getElementById(childKey).remove();
+	});  
+              
+	firebase.auth().onAuthStateChanged(function(user) {
+		if (user) {}
+		else {
+			//alert("Vui lòng đăng nhập!");
+			window.location="index.html";
+		}
+	});
+	var email = sessionStorage.getItem('email');
+	document.getElementById("name").innerHTML ="<h4>"+ email +"</h4>"
+</script>
+</head>
+<body>
+<header>
+	<div>
+		<a href="Manage.html"><i class="fa fa-user fa-border"> Thông tin nhân viên</i></a>
+		<li class ="li2"><i class="fa fa-laptop"> Quản lý bàn</i></li>
+		<a href="QLMenu.html"><i class="fa fa-coffee fa-border"> Quản lý thực đơn</i></a>
+		<a href="QLNhomMenu.html"><i class="fa fa-book fa-border"> Quản lý loại thực đơn</i></a>
+		<a href="QLHoaDon.html"><i class="fa fa-bars fa-border"> Quản lý hóa đơn</i></a>
+		<button onclick="logout()"><i class="fa fa-times fa-border"> Đăng xuất</i></button>
+	</div>
+</header>
+<main>
+	<h1><i><center>Quản lý bàn</center></i></h1>
+	<div style="width:40%;margin-left:10px;">
+	<input style="width:50%;" type="text" id="myInput" onkeyup="Search()" placeholder="Bạn cần tìm gì..."/>
+	<div style=" width:100%; height:500px; overflow:auto;">
+		<table id="content" border="1" cellpadding="5" onclick="tableClicked()">
+			<thead>
+			<tr>
+				<th colspan="2" style="text-align:center; font-size:25px; color:#903;"><B>Danh sách bàn</B></th>
+			</tr>
+			<tr>
+				<th>Tên bàn</th>
+				<th>Vị trí bàn</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+	</div>
+	<div style="width:40%; margin-left:30px; padding-bottom:100px;">
+	<table class="tbform">
+		<tr><td colspan="2"><span style="color:#0e0e26;"><h1>Cập nhật bàn</h1></span></td></tr>
+		<tr><td colspan="2"><input placeholder="ID..." id="key" type="hidden"></input></td></tr>
+		<tr><td colspan="2"><input placeholder="Tên bàn..." id="ban" type="text"></input></td></tr>
+		<tr><td colspan="2"><input placeholder="Vị trí bàn..." id="vitri" type="text"></input></td></tr>
+		<tr><td colspan="2"><input placeholder="NV thêm bàn..." id="nvid" type="hidden"></input></td></tr>
+		<tr><td><button type="submit" onclick="Insert()"><i class="fa fa-plus-square"> Thêm</i></button></td>
+		<td><button type="submit" onclick="updateData()"><i class="fa fa-repeat"> Cập nhật</i></button></td></tr>
+		<tr><td style="padding-bottom:10px;"><button type="submit" onclick="Delete()"><i class="fa fa-trash"> Xóa</i></button></td>
+		<td style="padding-bottom:10px;"><button type="reset" onclick="reset()"><i class="fa fa-refresh"> Làm mới</i></button></td></tr>
+	</table>
+	</div>
+</main>
+<script>
+	function Insert(){
+		var tenban = document.getElementById("ban");
+		var vitri = document.getElementById("vitri");
+	if(tenban.value == ""){
+			alert("Vui lòng nhập tên bàn cần thêm!");
+			}
+		else if(vitri.value == ""){
+			alert("Vui lòng nhập vị trí bàn cần thêm!");
+			}
+		
+		else{
+				var newUser = firebase.database().ref('ban/').push();
+				newUser.set({
+					tenban:tenban.value,
+					vitri:vitri.value
+				});
+				alert("Thêm thành công!");
+				reset();
+			}
+	 }
+	 function updateData() {
+		var key = document.getElementById("key").value;
+		var tenban = document.getElementById("ban").value;
+		var vitri = document.getElementById("vitri").value;
+		var nv_id = document.getElementById("nvid").value;
+      
+            var postData = {
+				key: key,
+                tenban: tenban,
+                vitri: vitri,
+				nv_id: nv_id
+            };
+            var newPostKey  = firebase.database().ref('ban/');
+
+            var updates = {};
+			updates['/ban/' + key] = postData;
+
+			firebase.database().ref().update(updates);
+			alert("Cập nhật thành công!");
+			reset();
+	}
+		
+	 function Delete(){
+		var key = document.getElementById("key").value;
+		var tenban = document.getElementById("ban");
+		if(tenban.value != ""){
+			if (confirm('Bạn chắc chắn là sẽ xóa?')) {
+				var ref2 = firebase.database().ref('Hoadon/');
+				ref2.once('value').then(function(snapshot) {
+					var checkExist = false;
+					snapshot.forEach(function(child) {
+						if(child.val().ban == key){
+							checkExist=true;
+						}
+					});
+				   if(checkExist == true){
+						alert("Dữ liệu đang được sử dụng ở bảng khác. Không thể xóa!");
+				   }else{
+						firebase.database().ref().child('/ban/' + key).remove();
+						alert("Bàn đã được xóa!");
+						reset();
+				   }
+
+			});
+				
+			}else{}
+		} else{
+			alert("Vui lòng chọn bàn cần xóa!");
+		}
+	 }
+	  function reset(){
+			document.getElementById("ban").value="";
+			document.getElementById("vitri").value="";
+			document.getElementById("nvid").value="";
+			}
+			
+	 function logout(){
+			firebase.auth().signOut().then(function() {
+			window.location="index.html";
+		}).catch(function(error) {
+			var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+			return false;
+		});
+	}
+		function tableClicked(){
+				var table = document.getElementById("content");
+				var row = table.rows;
+				if (table != null) {
+					for (var i = 0; i < row.length; i++) {
+						row[i].onclick = (function() {
+							var cnt = i-2; 
+							return function() {
+								var arr = document.getElementsByTagName('tr');
+								for(var i = 0; i < arr.length; i++){
+									arr[i].style.backgroundColor='#FFFFFF';}
+								document.getElementById(ArrayBan[cnt].key).style.backgroundColor='#D3D3D3';
+								document.getElementById("key").value = ArrayBan[cnt].key;
+								document.getElementById("ban").value = ArrayBan[cnt].tenban;
+								document.getElementById("vitri").value = ArrayBan[cnt].vitri;
+								document.getElementById("nvid").value = ArrayBan[cnt].nv_id;
+							}    
+						})(i);
+					}
+				}
+			}
+	function Search(){
+		var input, filter, table, tr, td, i;
+		input = document.getElementById("myInput");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("content");
+		tr = table.getElementsByTagName("tr");
+		for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[0];
+			if (td) {
+				if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+					tr[i].style.display = "";
+				} else {
+			tr[i].style.display = "none";
+				}
+			}       
+		}
+	 }
+</script>
+</body>
+</html>

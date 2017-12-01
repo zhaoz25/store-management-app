@@ -1,0 +1,108 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Store Management</title>
+<link rel="stylesheet" type="text/css"  href="css/index.css">
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script>
+	// Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyDYXG2nw4TKGv6j0pwtf_cA1d6iZjWhGa8",
+		authDomain: "storemanagementapp-fc745.firebaseapp.com",
+		databaseURL: "https://storemanagementapp-fc745.firebaseio.com",
+		projectId: "storemanagementapp-fc745",
+		storageBucket: "storemanagementapp-fc745.appspot.com",
+		messagingSenderId: "12863387758"
+	};
+  firebase.initializeApp(config);
+   
+  
+	function sign_in(){
+         var emailuser = document.getElementById("name").value;
+        var password = document.getElementById("pass").value;
+		
+        firebase.auth().signInWithEmailAndPassword(emailuser, password).then(function(user){
+			var auser = user.email;
+			sessionStorage.setItem('email', auser);	
+			check();
+			
+			//window.location="Manage.html";
+         }).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+			return false;
+        });
+    }
+	
+	function check(){
+	
+		var emailuser = document.getElementById("name").value;
+        var password = document.getElementById("pass").value;
+ 
+		var ArrayNV = [];
+		var ref = firebase.database().ref('nhanvien/');
+		var count = 0;
+        ref.once("value").then(function(snapshot) {	
+			var sumEmployee = snapshot.numChildren();
+			snapshot.forEach(function(childSnapshot) {
+				var childKey = childSnapshot.key;
+				var childData = childSnapshot.val();		
+				// doi tuong
+				var NV = {
+					key   : childKey,
+					address : childData.address,
+					email : childData.email,
+					gender : childData.gender,
+					position :childData.position,
+					firstName:childData.firstName,
+					lastName:childData.lastName,
+					shiftId:childData.shiftId,
+					fromDate:childData.fromDate
+				};
+				if(emailuser == NV.email){
+					if(NV.position == "thungan"){
+						ArrayNV.push(NV); 
+						var auser = NV.email;
+						sessionStorage.setItem('email', auser);	
+						window.location="Manage.html";
+						return true;
+					}			
+				}
+				count++;
+				if(count == sumEmployee){
+					alert("Bạn không đủ quyền hạn để truy cập trang web này!");
+				}
+			
+			//else{alert("Bạn không đủ quyền hạn để truy cập trang web này!");}	
+			});
+		});
+	}
+	function reset(){
+		document.getElementById("name").value="";
+		document.getElementById("pass").value="";
+	}
+	function runScript(e) {
+		if (e.keyCode == 13) {
+			sign_in();
+			return false;
+		}
+	}
+</script>
+</head>
+<body background="picture/Wallpapers.jpg">
+	<div>
+  		<input type="text" id="name" onkeypress="return runScript(event)"/></input>
+  		<input type="password" id="pass" onkeypress="return runScript(event)"></input>
+  		<button type="submit" onclick="sign_in()">Đăng nhập</button>
+		<button type="reset" onclick="reset()">Làm mới</button>
+		
+	</div>
+</body>
+</html>
+

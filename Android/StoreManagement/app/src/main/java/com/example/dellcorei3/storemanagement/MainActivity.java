@@ -18,7 +18,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.example.dellcorei3.storemanagement.employee.LonginAndCheckin.CheckinActivity;
 import com.example.dellcorei3.storemanagement.store.manager.MainManagementActivity;
+import com.example.dellcorei3.storemanagement.store.manager.models.CheckIn;
 import com.example.dellcorei3.storemanagement.store.manager.models.Employee;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -173,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
                             saveData(email,password);
 
                             Intent it = new Intent(MainActivity.this, MainManagementActivity.class);
-
                             startActivity(it);
                             if (progressDialog.isShowing()) {
                                 progressDialog.dismiss();
@@ -229,6 +230,10 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             // lưu dữ liệu vào shared
                             saveData(email,password);
+
+                            Intent it = new Intent(MainActivity.this, CheckinActivity.class);
+                            it.putExtra("Email", email);
+                            startActivity(it);
                             // tắt dialog
                             if (progressDialog.isShowing()) {
                                 progressDialog.dismiss();

@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Quản lý Thực đơn</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css"  href="css/QLMenu.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.2.0/jquery.priceformat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.2.0/jquery.priceformat.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDYXG2nw4TKGv6j0pwtf_cA1d6iZjWhGa8",
+    authDomain: "storemanagementapp-fc745.firebaseapp.com",
+    databaseURL: "https://storemanagementapp-fc745.firebaseio.com",
+    projectId: "storemanagementapp-fc745",
+    storageBucket: "storemanagementapp-fc745.appspot.com",
+    messagingSenderId: "12863387758"
+  };
+  firebase.initializeApp(config);
+					
+	var ArrayMenu = [];
+	var ArrNhomTD = [];
+	var ref = firebase.database().ref('thucdon/');
+        ref.on('child_added', function(data) {
+            var childKey = data.key;
+            var childData = data.val();
+						
+			// doi tuong
+			var MENU = {
+				key   : childKey,
+				thucdon_ten : childData.thucdon_ten,
+				thucdon_gia : childData.thucdon_gia,
+				nhom_id : childData.nhom_id,
+				nhom_ten : ""
+			};
+			var num = Number(MENU.thucdon_gia);
+			num = format(num,"");
+			
+			var nhomTen = "";
+			var ref2 = firebase.database().ref('nhom_thucdon/'+MENU.nhom_id);
+			ref2.once('value').then(function(snapshot) {
+							
+				nhomTen = snapshot.val().nhom_ten;
+				MENU.nhom_ten = nhomTen;
+				// them gia tri cho mang 
+				ArrayMenu.push(MENU);
+				
+				document.getElementById("content").innerHTML +="<tr id='"+MENU.key+"'><td class='likertCells'>"+MENU.thucdon_ten + "</td> <td class='likertCells'>"
+															+ num + "</td> <td class='likertCells'>" +MENU.nhom_ten + "</td> </tr> "  ; 
+			});       
+		});
+		  var likertCells = document.querySelectorAll('.likertCells'); // Mind the dot!
+        for (var i = 0; i < likertCells.length; i++) {
+            likertCells[i].setAttribute('onclick', 'checkRadioAndHighlight(this)')
+        }
+
+        function checkRadioAndHighlight(caller) {
+            var theKids = caller.childNodes;
+            for (var j = 0; j < theKids.length; j++) {
+                if (theKids[j].type == 'radio') theKids[j].checked = true;
+            }
+            var theSiblings = caller.parentNode.childNodes;
+            for (var k = 0; k < theSiblings.length; k++) {
+                if (theSiblings[k].tagName == 'TD') // The DOM returns tagNames in uppercase!
+                theSiblings[k].style.backgroundColor = '';
+            }
+            caller.style.backgroundColor = '#D3D3D3';
+        }
+	function format(n, currency) {
+			return currency + " " + n.toFixed(0).replace(/./g, function(c, i, a) {
+				return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+			});
+		}
+ // sự kiện khi database đc update
+	ref.on('child_changed', function(data) {
+		var childKey = data.key;
+        var childData = data.val();
+		// doi tuong
+		var MENU = {
+			key   : childKey,
+			thucdon_ten : childData.thucdon_ten,
+			thucdon_gia : childData.thucdon_gia,
+			nhom_id : childData.nhom_id,
+			nhom_ten : ""
+		};
+					
+		var nhomTen = "";
+		var ref2 = firebase.database().ref('nhom_thucdon/'+MENU.nhom_id);
+		ref2.once('value').then(function(snapshot) {
+							
+			nhomTen = snapshot.val().nhom_ten;
+			MENU.nhom_ten = nhomTen;
+			// cap nhat gia tri cho mang 
+			var i;
+			for(i = 0;i<ArrayMenu.length;i++){
+				if(ArrayMenu[i].key == MENU.key){
+					ArrayMenu[i] = MENU;
+				}
+			}
+
+			// cập nhật row
+			document.getElementById(MENU.key).innerHTML = "<td>"+MENU.thucdon_ten + "</td> <td>"
+														+MENU.thucdon_gia + "</td> <td>" +MENU.nhom_ten + "</td>";
+														
+		});	 
+	});
+	
+	
+	
+	// sự kiện khi data deleted
+	ref.on('child_removed', function(data) {
+		var childKey = data.key;
+		// xóa array element
+		var i;
+		for(i = 0;i<ArrayMenu.length;i++){
+			if(ArrayMenu[i].key == childKey){
+				ArrayMenu.splice(i,1);
+			}
+		}
+		//xoa row table
+		document.getElementById(childKey).remove();
+	});  
+			  
+	var ref = firebase.database().ref('nhom_thucdon/');
+    ref.on('child_added', function(data) {
+		var childData = data.val();
+		var NHOMTD = {
+			key: data.key,
+			ten: childData.nhom_ten			
+		}
+		ArrNhomTD.push(NHOMTD);
+		document.getElementById("loai").innerHTML += "<select> <option value='"+NHOMTD.key+"'>"+NHOMTD.ten + "</option> </select>"	;											
+	});
+			  
+	firebase.auth().onAuthStateChanged(function(user) {
+		if (user) {} else {
+			//alert("Vui lòng đăng nhập!");
+			window.location="index.html";
+		}
+	});
+	var email = sessionStorage.getItem('email');
+	document.getElementById("name").innerHTML ="<h4>"+ email +"</h4>"
+	
+</script>
+</head>
+<body>
+<header>
+	<div>
+		<a href="Manage.html"><i class="fa fa-user fa-border"> Thông tin nhân viên</i></a>
+		<a href="QLBan.html"><i class="fa fa-laptop fa-border"> Quản lý bàn</i></a>
+		<li class="li2"><i class="fa fa-coffee"> Quản lý thực đơn</i></li>
+		<a href="QLNhomMenu.html"><i class="fa fa-book fa-border"> Quản lý loại thực đơn</i></a>
+		<a href="QLHoaDon.html"><i class="fa fa-bars fa-border"> Quản lý hóa đơn</i></a>
+		<button onclick="logout()"><i class="fa fa-times fa-border"> Đăng xuất</i></button>
+	</div>
+</header>
+<main>
+	<h1><i><center>Quản lý thực đơn</center></i></h1>
+	<div style="width:50%; margin-left:30px;">
+		<input style="width:40%; top:0;" type="text" id="myInput" onkeyup="Search()" placeholder="Tìm thực đơn.."/>
+		<div style="width:100%; height:550px; overflow:auto;">
+			<table id="content" border="1" cellpadding="5" onclick="tableClicked()" >
+				<thead>
+					<tr>
+						<th colspan="3" style=" width:100%;text-align:center; font-size:25px; color:#903;"><B>Danh sách thực đơn</B></th>
+					</tr>
+					<tr>
+						<th>Tên thực đơn</th>
+						<th>Đơn giá (VNĐ)</th>
+						<th>Loại</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div style="width:30%;margin-left:30px; padding-bottom:100px;">
+	<table class="tbform">
+		<tr><td colspan="2"><span style="color:#0e0e26;"><h1>Cập nhật thực đơn</h1></span></td></tr>
+		<tr><td colspan="2"><input placeholder="ID..." id="key" type="hidden"/></td></tr>
+		<tr><td colspan="2"><input placeholder="Tên thực đơn..." id="id" type="text"/></td></tr>
+		<tr><td colspan="2"><input placeholder="Giá..." id="gia" type="number" /></td></tr>
+		<tr><td colspan="2"><select class="txt1" id="loai"></select></td></tr>
+		<tr><td><button type="submit" onclick="Insert()"><i class="fa fa-plus-square"> Thêm</i></button></td>
+		<td><button type="submit" onclick="Update()"><i class="fa fa-repeat"> Cập nhật</i></button></td></tr>
+		<tr><td style="padding-bottom:10px;"><button type="submit" onclick="Delete()"><i class="fa fa-trash"> Xóa</i></button></td>
+		<td style="padding-bottom:10px;"><button type="reset" onclick="reset()"><i class="fa fa-refresh"> Làm mới</i></button></td></tr>
+	</table>
+	</div>
+</main>			
+<script>
+	 function Insert(){
+		var thucdon_ten = document.getElementById("id");
+		var thucdon_gia = document.getElementById("gia");
+		var nhom_id = document.getElementById("loai");
+		
+				if(thucdon_ten.value == ""){
+			alert("Vui lòng nhập tên thực đơn!");
+			}
+		else if(thucdon_gia.value == ""){
+			alert("Vui lòng nhập đơn giá!");
+			}
+		else{
+				var newUser = firebase.database().ref('thucdon/').push();
+				newUser.set({
+					thucdon_ten:thucdon_ten.value,
+					thucdon_gia:thucdon_gia.value,
+					nhom_id:ArrNhomTD[nhom_id.selectedIndex].key,
+					nhom_ten:ArrNhomTD[nhom_id.selectedIndex].ten
+				
+				});
+		alert("Thêm thành công!");
+		reset();
+			}
+	 }
+	 
+	 function Update() {
+		var key = document.getElementById("key").value;
+		var thucdon_ten = document.getElementById("id").value;
+		var thucdon_gia = document.getElementById("gia").value;
+		var nhom_id = document.getElementById("loai").value;
+           
+            var postData = {
+				key: key,
+                thucdon_ten: thucdon_ten,
+                thucdon_gia: thucdon_gia,
+				nhom_id: nhom_id
+            };
+            var newPostKey  = firebase.database().ref('thucdon/');
+
+            var updates = {};
+			updates['/thucdon/' + key] = postData;
+
+			firebase.database().ref().update(updates);
+			alert("Cập nhật thành công!");
+			reset();
+        }
+		
+	  function Delete(){
+		var key = document.getElementById("key").value;
+		var thucdon_ten = document.getElementById("id");
+		if(thucdon_ten.value != ""){	
+		if (confirm('Bạn có chắc chắn là xẽ xóa?')) {
+			var ref2 = firebase.database().ref('Hoadon_chitiet/');
+			ref2.once('value').then(function(snapshot) {
+				var childKey = snapshot.key;
+				var childData = snapshot.val();
+				
+				var checkExist = false;
+				snapshot.forEach(function(child) {
+					child.forEach(function(child2){
+						if(child2.val().thucdon_id == key){
+							checkExist=true;
+						}
+					});
+				});
+				
+			   if(checkExist == true){
+					alert("Dữ liệu đang được sử dụng ở bảng khác. Không thể xóa!");
+			   }else{
+					firebase.database().ref().child('/thucdon/' + key).remove();
+					alert("Thực đơn đã được xóa!");
+					reset();
+			   }
+
+			});
+			
+		} else {}	
+		} else{
+			alert("Vui lòng chọn thực đơn cần xóa!");
+		}
+	 }
+	 
+	 function Search(){
+		var input, filter, table, tr, td, i;
+		input = document.getElementById("myInput");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("content");
+		tr = table.getElementsByTagName("tr");
+		for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[0];
+			if (td) {
+				if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+					tr[i].style.display = "";
+				} else {
+			tr[i].style.display = "none";
+				}
+			}       
+		}
+	 }
+	 
+	 function reset(){
+			document.getElementById("id").value="";
+			document.getElementById("gia").value="";
+			}
+	 
+	 function logout(){
+			firebase.auth().signOut().then(function() {
+			window.location="index.html";
+		}).catch(function(error) {
+			var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+			return false;
+		});
+	}
+	 function tableClicked(){
+		var table = document.getElementById("content");
+		var row = table.rows;
+		if (table != null) {
+			for (var i = 0; i < row.length; i++) {
+				row[i].onclick = (function() {
+					var cnt = i-2; 
+					return function() {
+					var arr = document.getElementsByTagName('tr');
+								for(var i = 0; i < arr.length; i++){
+									arr[i].style.backgroundColor='#FFFFFF';}
+								document.getElementById(ArrayMenu[cnt].key).style.backgroundColor='#D3D3D3';
+						document.getElementById("key").value = ArrayMenu[cnt].key;
+						document.getElementById("id").value = ArrayMenu[cnt].thucdon_ten;
+						document.getElementById("gia").value =ArrayMenu[cnt].thucdon_gia;
+						document.getElementById("loai").value =ArrayMenu[cnt].nhom_id;
+					}    
+				})(i);
+			}
+		}
+	}
+</script>
+</body>
+</html>

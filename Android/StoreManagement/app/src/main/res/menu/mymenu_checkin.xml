@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.dellcorei3.storemanagement.employee.TabLayout.Main2Activity">
+    <item
+        android:id="@+id/action_checkin"
+        android:orderInCategory="100"
+        android:title="@string/checkin"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_order"
+        android:orderInCategory="100"
+        android:title="@string/order"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="100"
+        android:title="Logout"
+        app:showAsAction="never" />
+</menu>

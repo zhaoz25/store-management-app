@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Quản lý loại thực đơn</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"  href="css/QLNhomMenu.css">
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDYXG2nw4TKGv6j0pwtf_cA1d6iZjWhGa8",
+    authDomain: "storemanagementapp-fc745.firebaseapp.com",
+    databaseURL: "https://storemanagementapp-fc745.firebaseio.com",
+    projectId: "storemanagementapp-fc745",
+    storageBucket: "storemanagementapp-fc745.appspot.com",
+    messagingSenderId: "12863387758"
+  };
+  firebase.initializeApp(config);
+  
+  var ArrayNhomMenu = [];
+  
+  var ref = firebase.database().ref('nhom_thucdon/');
+               ref.on('child_added', function(data) {
+                        var childKey = data.key;
+                        var childData = data.val();
+						
+						// doi tuong
+						var NhomMenu = {
+							key   : childKey,
+							nhom_ten : childData.nhom_ten	
+						};
+					
+						// them gia tri cho mang 
+						ArrayNhomMenu.push(NhomMenu);
+						document.getElementById("content").innerHTML +="<tr id='"+NhomMenu.key+"'><td id='tdstt'>"+"</td> <td>"+NhomMenu.nhom_ten + "</td> </tr>"              
+			});
+	// sự kiện khi database đc update
+	ref.on('child_changed', function(data) {
+		var childKey = data.key;
+        var childData = data.val();
+		// doi tuong
+		var NhomMenu = {
+			key   : childKey,
+			nhom_ten : childData.nhom_ten
+		};
+			var i;
+			for(i = 0;i<ArrayNhomMenu.length;i++){
+				if(ArrayNhomMenu[i].key == NhomMenu.key){
+					ArrayNhomMenu[i] = NhomMenu;
+				}
+			}
+			// cập nhật row
+			document.getElementById(NhomMenu.key).innerHTML = "<tr> <td>"+NhomMenu.nhom_ten + "</td> </tr>";
+		});	 
+	
+	// sự kiện khi data deleted
+	ref.on('child_removed', function(data) {
+		var childKey = data.key;
+		// xóa array element
+		var i;
+		for(i = 0;i<ArrayNhomMenu.length;i++){
+			if(ArrayNhomMenu[i].key == childKey){
+				ArrayNhomMenu.splice(i,1);
+			}
+		}
+		//xoa row table
+		document.getElementById(childKey).remove();
+	});  
+	
+	firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {} else {
+				//alert("Vui lòng đăng nhập!");
+				window.location="index.html";
+			}
+		});
+</script>
+</head>
+<body>
+<header>
+	<div>
+		<a href="Manage.html"><i class="fa fa-user fa-border"> Thông tin nhân viên</i></a>
+		<a href="QLBan.html"><i class="fa fa-laptop fa-border"> Quản lý bàn</i></a>
+		<a href="QLMenu.html"><i class="fa fa-coffee fa-border"> Quản lý thực đơn</i></a>
+		<li class="li2"><i class="fa fa-book"> Quản lý loại thực đơn</i></li>
+		<a href="QLHoaDon.html"><i class="fa fa-bars fa-border"> Quản lý hóa đơn</i></a>
+		<button onclick="logout()"><i class="fa fa-times fa-border"> Đăng xuất</i></button>
+	</div>
+</header>
+<main>
+	<h1><i><center>Quản lý loại thực đơn</center></i></h1>
+	<div style="width:45%; margin-left:10px; text-align:center;">
+	<div style="width:100%; height:350px; overflow:auto;">
+		<table id="content" border="1" cellpadding="5" onclick="tableClicked()">
+			<thead><tr>
+				<th colspan="2" style="text-align:center; font-size:25px; color:#903;"><B>Danh sách loại thực đơn</B></th>
+			</tr>
+				<tr>
+				<th>STT</th>
+				<th>Tên loại</th>
+			</tr></thead>
+		</table>
+	</div>
+	</div>
+	<div style="width:47%; margin-left:30px; text-align:center;">
+	<table class="tbform">
+		<tr><td colspan="2"><span style="color:#0e0e26;"><h1><B>Cập nhật loại thực đơn</B></h1></span></td></tr>
+		<tr><td colspan="2"><input placeholder="Tên loại thực đơn..." id="id" type="hidden"></input></td></tr>
+		<tr><td colspan="2"><input placeholder="Tên loại thực đơn..." id="ten" type="text"></input></td></tr>
+		<tr><td><button type="submit" onclick="Insert()"><i class="fa fa-plus-square"> Thêm</i></button></td>
+		<td><button type="submit" onclick="Update()"><i class="fa fa-repeat"> Cập nhật</i></button></td></tr>
+		<tr><td style="padding-bottom:10px;"><button type="submit" onclick="Delete()"><i class="fa fa-trash"> Xóa</i></button></td>
+		<td style="padding-bottom:10px;"><button type="reset" onclick="reset()"><i class="fa fa-refresh"> Làm mới</i></button></td></tr>
+	</table>
+	</div>
+</main>
+<script>
+	function Insert(){
+		var nhom_ten = document.getElementById("ten");
+		if(nhom_ten.value != "")
+		{
+				var newUser = firebase.database().ref('nhom_thucdon/').push();
+				newUser.set({
+					nhom_ten:nhom_ten.value
+				});
+		alert("Thêm thành công!");
+		reset();}
+		else{
+			alert("Vui lòng nhập tên loại!");
+		}
+	 }
+	 function Update() {
+		var key = document.getElementById("id").value;
+		var nhom_ten = document.getElementById("ten").value;
+            var postData = {
+				key: key,
+                nhom_ten: nhom_ten
+            };
+            var newPostKey  = firebase.database().ref('nhom_thucdon/');
+
+            var updates = {};
+			updates['/nhom_thucdon/' + key] = postData;
+
+			firebase.database().ref().update(updates);
+			alert("Cập nhật thành công!");
+			reset();
+        }	
+	 function Delete(){
+		var keyn = document.getElementById("id").value;
+		var nhom_ten = document.getElementById("ten");
+		if(nhom_ten.value != ""){
+		if (confirm('Bạn có chắc chắn là xẽ xóa?')) {
+			
+			
+			var ref = firebase.database().ref('thucdon/');
+			ref.once('value').then(function(snapshot) {
+				var childKey = snapshot.key;
+				var childData = snapshot.val();
+				
+				var checkExist = false;
+				snapshot.forEach(function(child) {
+					if(child.val().nhom_id == keyn){
+						checkExist=true;
+					}
+				});
+			   if(checkExist == true){
+					alert("Dữ liệu đang được sử dụng ở bảng khác. Không thể xóa!");
+			   }else{
+					firebase.database().ref().child('/nhom_thucdon/' + keyn).remove();
+					alert("Loại thực đơn đã được xóa!");
+			   }
+
+			});
+			
+			reset();
+			} else {}	
+		} else{
+			alert("Vui lòng chọn loại thực đơn cần xóa!");
+		}
+	 }
+	
+	function reset(){
+			document.getElementById("id").value="";
+			document.getElementById("ten").value="";
+			}
+	 
+	 function reload_page(){
+			window.location.reload();
+		}
+	 function logout(){
+			firebase.auth().signOut().then(function() {
+			window.location="index.html";
+		}).catch(function(error) {
+			var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+			return false;
+		});
+	}
+	 function tableClicked(){
+		var table = document.getElementById("content");
+		var row = table.rows;
+		if (table != null) {
+			for (var i = 0; i < row.length; i++) {
+				row[i].onclick = (function() {
+					var cnt = i-2; 
+					return function() {
+					  document.getElementById("id").value = ArrayNhomMenu[cnt].key;
+					  document.getElementById("ten").value = ArrayNhomMenu[cnt].nhom_ten;
+					}    
+				})(i);
+			}
+		}
+	}
+</script>		
+</body>
+</html>

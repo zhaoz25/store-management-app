@@ -99,7 +99,12 @@ public class CreateAccountActivity extends AppCompatActivity {
                     // thông báo thành công
                     Toast.makeText(CreateAccountActivity.this, "Tạo tài khoản thành công!",
                             Toast.LENGTH_SHORT).show();
-                    finish();
+                    // reset field
+                    etEmail.setText("");
+                    etPass.setText("");
+                    etConfirmPass.setText("");
+                    etFirstName.setText("");
+                    etLastName.setText("");
                 }
                 else{
                     Log.d("Error create user:",task.getException().getMessage());

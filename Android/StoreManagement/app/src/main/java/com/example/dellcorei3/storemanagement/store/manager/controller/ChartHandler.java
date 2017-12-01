@@ -35,9 +35,9 @@ public class ChartHandler {
                 // tính tổng tiền theo mỗi ngày
                 if(time1.equals(time2) == true){
                     // loại bỏ hoadon chưa thanh toán
-                    //if(alHD.get(j).tongTien.equals("")==false && alHD.get(j).trangthai.equals("dathanhtoan") == true) {
+                    if(alHD.get(j).tongTien.equals("")==false && alHD.get(j).trangthai.equals("dathanhtoan") == true) {
                         hd.sumData += Integer.parseInt(alHD.get(j).tongTien);
-                   // }
+                    }
                 }
             }
 
@@ -54,30 +54,22 @@ public class ChartHandler {
         ArrayList<HDChartData> chartSorted = new ArrayList<>();
         int count = 0;
         // lấy 5 ngày có tổng tiền cao nhất
-        if(alChart.size() >= 8){
             // lấy ngày cao nhất
             if(type == 1) {
                 for (int i = alChart.size() - 1; i >= 0; i--) {
                     chartSorted.add(alChart.get(i));
                     count++;
-                    if (count >= 8) {
-                        break;
-                    }
+
                 }
             }
             else{
                 for (int i = 0; i < alChart.size(); i++) {
                     chartSorted.add(alChart.get(i));
                     count++;
-                    if (count >= 8) {
-                        break;
-                    }
+
                 }
             }
-        }
-        else{
-            return alChart;
-        }
+
 
         return chartSorted;
     }

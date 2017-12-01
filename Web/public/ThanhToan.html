@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thanh toán hóa đơn</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDYXG2nw4TKGv6j0pwtf_cA1d6iZjWhGa8",
+    authDomain: "storemanagementapp-fc745.firebaseapp.com",
+    databaseURL: "https://storemanagementapp-fc745.firebaseio.com",
+    projectId: "storemanagementapp-fc745",
+    storageBucket: "storemanagementapp-fc745.appspot.com",
+    messagingSenderId: "12863387758"
+  };
+  firebase.initializeApp(config);
+  //hóa đơn chi tiết
+	var sum=0;
+	var hdKey = sessionStorage.getItem('key');
+		ArrayHoaDon_CT = [];
+		ArrayHoaDon = [];
+		ArrayBan = [];
+		var ref = firebase.database().ref('Hoadon_chitiet/'+hdKey);
+						ref.on('child_added', function(data) {
+							var childKey = data.key;
+							var childData = data.val();	
+							var HoaDon_CT = {
+								key   : childKey,
+								ten : "",
+								soluong : childData.soluong,
+								thucdon_id: childData.thucdon_id,
+								gia : childData.gia,
+								tong: childData.tongtien
+							};
+							
+							var ref2 = firebase.database().ref('thucdon/'+HoaDon_CT.thucdon_id);
+							ref2.once('value').then(function(snapshot) {
+							HoaDon_CT.ten = snapshot.val().thucdon_ten;
+								
+							num = Number(HoaDon_CT.gia);
+							num = format(num,"");
+							
+							var tong = Number(HoaDon_CT.tong);
+							sum += Number(tong);
+							tong = format(tong,"");
+							
+							var sumFormat = format(sum,"");
+							//var kq = Number(HoaDon_CT.soluong) * Number(HoaDon_CT.gia);
+							//kq = format(kq, "");
+							
+							ArrayHoaDon_CT.push(HoaDon_CT);
+							document.getElementById("content").innerHTML += "<tr> <td id='tdstt'>"+"</td> <td>"+ HoaDon_CT.ten + "</td> <td>"
+																			+ HoaDon_CT.soluong+ "</td> <td>"
+																			+ num+ "</td> <td>"			
+																			+tong +"</td> </tr>";
+							document.getElementById("tong").innerHTML = "<tr><td><B> Chiết khấu:   </B>"+"0"+"</td></tr>"
+																		+ "<tr><td><B> Phụ phí:   </B>"+"0"+"</td></tr>"
+																		+"<tr><td> -----"+"</td></tr>"
+																		+ "<tr><td><B> Tổng cộng: </B>"+sumFormat+" VNĐ"+"</td></tr>";
+					        });
+						});
+		
+						
+	function format(n, currency) {
+			return currency + " " + n.toFixed(0).replace(/./g, function(c, i, a) {
+				return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+			});
+		}
+  
+  //hóa đơn 
+	
+	var ref1 = firebase.database().ref('Hoadon/');
+	//alert(hdKey);
+	 ref1.on('child_added', function(data) {
+        var childKey = data.key;
+		if(childKey == hdKey){
+			var childData = data.val();
+			var HoaDon = {
+				key   : childKey,
+				ban : childData.ban,
+				ban_cu : childData.ban_cu,
+				gio_thanhtoan:childData.gio_thanhtoan,
+				khuyenmai_id: childData.khuyenmai_id,
+				ngay : childData.ngay,
+				nhanvien_id : childData.nhanvien_id,
+				tongTien : childData.tongTien,
+				tenban: "",
+				trangthai: childData.trangthai,
+				firstName: "",
+				lastName: ""
+			};
+			
+			//format date	
+			var time = new Date(HoaDon.ngay.timestamp);
+			var date = time.toLocaleString();
+			
+			var Ban = "";
+			var ref6 = firebase.database().ref('ban/'+HoaDon.ban);
+			ref6.on('child_added', function(data) {
+                     var childData = data.val();
+					 var childKey = data.getKey();
+					 if(childKey=='choose'){
+						var val="";
+						var updates = {};
+						updates['/ban/' + HoaDon.ban+'/choose'] = val;
+						firebase.database().ref().update(updates);
+						
+					}
+				
+				if(childKey=="tenban"){
+					Ban = childData;
+					HoaDon.tenban = Ban;
+				}
+		
+				var nv = "";
+				var nv1 = "";
+				var check = 1;
+				var ref2 = firebase.database().ref('nhanvien/'+HoaDon.nhanvien_id);
+				ref2.once('value').then(function(snapshot) {
+		
+					nv1 = snapshot.val().firstName;
+					nv = snapshot.val().lastName;
+					HoaDon.firstName = nv1;
+					HoaDon.lastName = nv;
+					ArrayHoaDon.push(HoaDon);
+					//display
+					document.getElementById("thongtin").innerHTML = "<tr id='"+HoaDon.key+"'><td>"+"<B>Bàn: </B>"+"</td><td>"+HoaDon.tenban+"</td></tr>"
+																	+"<tr id='"+HoaDon.key+"'><td>"+"<B>Ngày: </B>"+"</td><td>"+date+"</td></tr>"
+																	+"<tr id='"+HoaDon.key+"'><td>"+"<B>NV phục vụ: </B>"+
+																	"</td><td>"+HoaDon.firstName+" "+HoaDon.lastName +"</td></tr>";
+					
+					
+					// cập nhật trangthai
+						
+					var updates = {};
+					updates['/Hoadon/' + hdKey+'/trangthai'] = "dathanhtoan";
+					
+					firebase.database().ref().update(updates);
+					
+					
+					
+					
+				})
+			});
+		}
+	});
+
+	var ThongTin = {
+				address: "",
+				duration : "",
+				name : "",
+				phone:"",
+				title:""
+	};
+	var ref3 = firebase.database().ref('store_information/');
+	 ref3.on('child_added', function(data) {
+		var childKey = data.getKey();
+		var childData = data.val();
+		if(childKey == "name"){
+			ThongTin.name=childData;
+		}
+		else if(childKey == "duration"){
+			ThongTin.duration=childData;
+		}
+		else if(childKey == "address"){
+			ThongTin.address=childData;
+		}
+		else if(childKey == "phone"){
+			ThongTin.phone=childData;
+		}
+		else if(childKey == "title"){
+			ThongTin.title=childData;
+		}
+			
+			//display
+			document.getElementById("information").innerHTML = "<tr><td colspan='2'><h1><center>"+ThongTin.name+"</center></h1></td></tr>"
+																	+"<tr><td>"+"<B>Địa chỉ: </B>"+"</td><td>"+ThongTin.address+"</td></tr>"
+																	+"<tr><td>"+"<B>Hotline: </B>"+"</td><td>"+ThongTin.phone+"</td></tr>"
+																	+"<tr><td>"+"<B>Thời gian hoạt động: </B>"+"</td><td>"+ThongTin.duration+"</td></tr>"
+																	+"<tr><td colspan='2'><center><B><h2>"+ThongTin.title+"</h2></B></center></td></tr>";			
+	});
+         
+
+
+  firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+	} else {
+		//alert("Vui lòng đăng nhập!");
+		window.location="index.html";
+		}
+	});
+	
+</script>
+</head>
+<style>
+ html { background-size:100%; 
+		background-color:#F0F8FF;
+		height: 100%;
+		margin-left:100px;
+		text-align:center;}
+	body {margin-left:30%;
+		background-color:#FFF;
+		width:25%;}
+	table{border-collapse:collapse; 
+		border-width: 2px; 
+		font-size:15px;
+		margin-left:10px;}
+	
+	body {counter-reset: section ;}
+	#tdstt::before {counter-increment: section;
+		content:counter(section);}
+</style>
+<body>
+<br>
+	<table id="information" border="0" cellpadding="5" style="text-align:left;">
+	</table>
+		-----oOo-----
+	<h2>PHIẾU THANH TOÁN</h2>
+	<table id="thongtin" border="0" cellpadding="5" style="text-align:left;">
+	</table>
+	<br>
+	<table id="content" border="1" cellpadding="5">
+		<tr>
+			<th>STT</th>
+			<th>Tên món</th>
+			<th>SL</th>
+			<th>Đơn giá</th>
+			<th>Thành tiền</th>
+		</tr>
+	</table><br>
+	<table id="tong" border="0" cellpadding="5" style="margin-left:40%; font-size:17px; text-align:right;">	
+	</table>
+	<h3><I>Hân hạnh phục vụ quý khách</I></h3><br>
+</body>
+</html>

@@ -1,0 +1,115 @@
+
+body, html { background-size:100%; 
+		background-color:	#F0F8FF;
+		height: 100%;
+		margin:0;
+		margin-left:20px;}
+	
+	header{	height:100%; 
+		display:inline-block; 
+		background-color:#0e0e26; 
+		width:265px;  
+		position:fixed;
+		z-index:1;
+		top:0;
+		left:0;}
+		
+	 header a:hover {color:#903;
+		background-color:#FF9;
+		border-color:#FF9;	}
+		
+	header button:hover {color:#903;
+		background-color:#FF9;
+		border-color:#FF9;	}
+		
+	header i{font-size:25px; width:250px;}
+		
+	main{display:inline-block;
+		margin-left:280px;}
+	
+	header a{float:none;
+		display:block;
+		color:#FFF;
+		font-size:25px;
+		margin-top:10px;
+		width:265px;}
+	
+	header button{color:#FFF;
+		font-size:25px;
+		width:265px;
+		text-align:left;
+		padding-left:0px;
+		margin-left:0px;}	
+	
+	li { float:none;
+		display:block;
+		color:#FFF;}
+		
+	.li1{display:block;
+		font-size:25px;
+		color:#FFF;
+		margin-top:10px;
+		margin-left:10px;}
+	
+	.li2{display:block;
+		font-size:25px;
+		color:#FFD700;
+		margin-top:7px;		
+		margin-bottom:7px;
+		width:250px;}
+		
+	table{background-color:#FFF;
+		border-collapse:collapse;
+		border-width: 2px; 
+		width:100%; height:100%;
+		text-align:center;}
+	
+	tr:hover{background-color:#f5f5f5;}
+	
+	input {display:block;
+		margin-bottom:7px;
+		padding: 5px 5px;
+		margin-left:20px;
+		width: 80%;
+		height: 30px;
+		font-size: 20px;
+		font-weight: 20px;
+		border-radius:5px;
+		background-color: #FFF;
+		background-position: 110% center;
+		background-repeat: no-repeat;
+		border: 1px solid #ccc;}
+	
+	button {border: none;
+		background: #0e0e26;
+		cursor: pointer;
+		border-radius: 3px;
+		padding: 6px;
+		width: 90%;
+		color: #FFD700;
+		margin-left:7px;
+		margin-bottom:5px;
+		box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+		font-size:25px;}
+	
+	button:hover {transform: translateY(-3px);
+		box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.2);
+		background-color:#FF9;
+		color:#903;}
+	
+	div{display:inline-block;
+	}
+	
+	.tbform {width:100%;
+		margin-left:20%; 
+		background-color:#f5f5f5; 
+		border:2px solid #0e0e26;
+		border-radius:5px;
+		border-radius:3px;}	
+		
+	th{text-align:center;
+		background-color:#FF9;}
+
+	body {counter-reset: section ;}
+	#tdstt::before {counter-increment: section;
+		content:counter(section);}
