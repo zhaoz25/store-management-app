@@ -27,16 +27,16 @@
         <activity
             android:name=".employee.Main_lauout_Bill"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".employee.Main_Layout_Bill_2"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".employee.LonginAndCheckin.CheckinActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard"
             android:label="Thông Tin"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".store.manager.MainManagementActivity"
             android:label="QUẢN LÝ BÁN HÀNG" />
@@ -80,7 +80,9 @@
             android:label="DOANH THU THEO GIỜ" />
         <activity
             android:name=".store.manager.StoreInfomationActivity"
-            android:label="THÔNG TIN CỬA HÀNG"/>
+            android:label="THÔNG TIN CỬA HÀNG" />
+        <activity android:name=".ForgotPasswordActivity"
+            android:label="QUÊN MẬT KHẨU"></activity>
     </application>
 
 </manifest>

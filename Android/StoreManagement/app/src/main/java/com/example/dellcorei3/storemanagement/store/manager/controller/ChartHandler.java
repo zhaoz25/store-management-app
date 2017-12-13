@@ -53,7 +53,6 @@ public class ChartHandler {
 
         ArrayList<HDChartData> chartSorted = new ArrayList<>();
         int count = 0;
-        // lấy 5 ngày có tổng tiền cao nhất
             // lấy ngày cao nhất
             if(type == 1) {
                 for (int i = alChart.size() - 1; i >= 0; i--) {

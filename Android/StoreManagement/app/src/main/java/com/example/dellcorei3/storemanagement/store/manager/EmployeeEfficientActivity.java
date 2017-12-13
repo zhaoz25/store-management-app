@@ -2,6 +2,7 @@ package com.example.dellcorei3.storemanagement.store.manager;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -139,8 +140,10 @@ public class EmployeeEfficientActivity extends AppCompatActivity {
 
         pieDataSet = new PieDataSet(entries, "");
         pieData = new PieData(PieEntryLabels, pieDataSet);
-
-        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        int[] colors={Color.rgb(255,0,0),Color.rgb(0,0,255),Color.rgb(0,255,0)
+                ,Color.rgb(239,255,0),Color.rgb(255,128,0),Color.rgb(174,52,235)
+                ,Color.rgb(12,215,238),Color.rgb(12,238,200),Color.rgb(255,204,229),};
+        pieDataSet.setColors(colors);
         pieDataSet.setValueTextSize(14);
 
         pieChart.setData(pieData);

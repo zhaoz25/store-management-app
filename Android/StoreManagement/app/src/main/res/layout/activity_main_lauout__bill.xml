@@ -5,40 +5,99 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#CFD8DC"
 
     tools:context="com.example.dellcorei3.storemanagement.employee.Main_lauout_Bill">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/bt_id_taohd"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="#E8EAF6"
-            >
-            <Button
-                android:id="@+id/bt_id_taohd"
-                android:layout_gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Tạo Hóa Đơn Mới"
-                android:textSize="20dp"
-                android:textColor="#FFFFFF"
-                android:background="#1E88E5"
-                />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="#1E88E5"
+            android:text="Tạo Hóa Đơn Mới"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
 
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="Hiển thị tất cả hóa đơn"
+            android:textSize="18sp" />
 
-        </LinearLayout>
     </LinearLayout>
-    <ListView
-        android:id="@+id/id_lv"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff"
-        />
+        android:layout_height="wrap_content"
+        android:background="#c2bbbb"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:maxWidth="80dp"
+            android:minWidth="80dp"
+            android:text="Bàn"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/MyTexrStyle"
+            android:textColor="#000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:maxWidth="80dp"
+            android:minWidth="80dp"
+            android:text="Nhân viên"
+            android:textAppearance="@style/MyTexrStyle"
+            android:textColor="#000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:gravity="right"
+            android:maxWidth="100dp"
+            android:minWidth="100dp"
+            android:text="Trạng thái"
+            android:textAppearance="@style/MyTexrStyle"
+            android:textColor="#000" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/id_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff" />
+
+        <TextView
+            android:id="@+id/tvStatusConnection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:alpha="5"
+            android:background="#83f40909"
+            android:text="Không có kết nối"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp"
+            android:visibility="visible" />
+    </RelativeLayout>
 
 
 </LinearLayout>

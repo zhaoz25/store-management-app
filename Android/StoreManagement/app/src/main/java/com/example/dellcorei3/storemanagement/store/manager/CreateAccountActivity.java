@@ -1,5 +1,6 @@
 package com.example.dellcorei3.storemanagement.store.manager;
 
+import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,6 +36,8 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference myDatabase;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,11 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     private void createAccount(final String email, String password, final String nv, final String firstName, final String lastName){
+        progressDialog = new ProgressDialog(CreateAccountActivity.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(true);
+        progressDialog.show();
+
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(CreateAccountActivity.this,
                 new OnCompleteListener<AuthResult>() {
             @Override
@@ -105,11 +113,19 @@ public class CreateAccountActivity extends AppCompatActivity {
                     etConfirmPass.setText("");
                     etFirstName.setText("");
                     etLastName.setText("");
+
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                 }
                 else{
                     Log.d("Error create user:",task.getException().getMessage());
                     Toast.makeText(CreateAccountActivity.this, "Không thể tạo tài khoản ("+task.getException().getMessage()+")",
                             Toast.LENGTH_LONG).show();
+
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                 }
             }
         });

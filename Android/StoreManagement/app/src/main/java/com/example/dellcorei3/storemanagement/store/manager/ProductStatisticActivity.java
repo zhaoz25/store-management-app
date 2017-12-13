@@ -54,9 +54,6 @@ public class ProductStatisticActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    private static final int MAX = 2;
-    private static final int MIN = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +67,7 @@ public class ProductStatisticActivity extends AppCompatActivity {
         alThucDon = new ArrayList<>();
         alProduct = new ArrayList<>();
         rdMax.setChecked(true);
+
 
         // sự kiện click edit text
         etFrom.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +158,7 @@ public class ProductStatisticActivity extends AppCompatActivity {
 
     private void getHoaDon(Long from,Long to){
         alHoaDon.clear();
+        alHoaDonChiTiet.clear();
 
         progressDialog = new ProgressDialog(ProductStatisticActivity.this);
         progressDialog.setMessage("Loading...");
@@ -173,27 +172,16 @@ public class ProductStatisticActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        Log.d("data2",issue.getValue().toString());
+
                         HoaDon hd = issue.getValue(HoaDon.class);
                         hd.hoadonId = issue.getKey();
 
                         alHoaDon.add(hd);
                         getHoaDonChiTiet(hd.hoadonId);
                     }
-                    // lấy menu
-                    if(alThucDon.size() == 0) {
-                        getMenu();
-                    }
-                    else{
-                        handlerData();
-                        productAdapter = new ProductAdapter(ProductStatisticActivity.this,R.layout.listviewe_product,alProduct);
-                        lv.setAdapter(productAdapter);
-                        productAdapter.notifyDataSetChanged();
+                    // lấy menu và hiển thị ra listview
+                    getMenu();
 
-                        if (progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
-                    }
 
                 }
                 else{
@@ -215,8 +203,6 @@ public class ProductStatisticActivity extends AppCompatActivity {
     }
 
     private void getHoaDonChiTiet(String hoadonId){
-        alHoaDonChiTiet.clear();
-
         mDatabase.child("Hoadon_chitiet").child(hoadonId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -226,10 +212,7 @@ public class ProductStatisticActivity extends AppCompatActivity {
                         HoaDonChiTiet hdct = issue.getValue(HoaDonChiTiet.class);
                         hdct.id = issue.getKey();
                         alHoaDonChiTiet.add(hdct);
-
-                        Log.d("hoadonct",hdct.ten+"-"+hdct.gia+" "+issue.getKey());
                     }
-
                 }
                 else{
 
@@ -255,9 +238,8 @@ public class ProductStatisticActivity extends AppCompatActivity {
                         td.id = issue.getKey();
                         alThucDon.add(td);
                     }
-                    Log.d("size",alThucDon.size()+"");
                     // lấy dữ liệu cho listview
-                    handlerData();
+                    alProduct = handlerData(alHoaDonChiTiet);
                     productAdapter = new ProductAdapter(ProductStatisticActivity.this,R.layout.listviewe_product,alProduct);
                     lv.setAdapter(productAdapter);
                     productAdapter.notifyDataSetChanged();
@@ -283,7 +265,8 @@ public class ProductStatisticActivity extends AppCompatActivity {
         });
     }
 
-    private void handlerData(){
+    private ArrayList<StatisticProduct> handlerData(ArrayList<HoaDonChiTiet> alHoaDonChiTiet){
+        ArrayList<StatisticProduct> alProduct=new ArrayList<>();
         for(int i=0;i<alThucDon.size();i++){
             ThucDon td = alThucDon.get(i);
             StatisticProduct product = new StatisticProduct();
@@ -291,8 +274,8 @@ public class ProductStatisticActivity extends AppCompatActivity {
             for(int j=0;j<alHoaDonChiTiet.size();j++){
                 HoaDonChiTiet hd = alHoaDonChiTiet.get(j);
                 if(hd.thucdon_id.equals(td.id) == true){
-                    product.soluong += 1;
-                    product.tongtien += Integer.parseInt(td.thucdon_gia);
+                    product.soluong += Integer.parseInt(hd.soluong);
+                    product.tongtien += (Integer.parseInt(td.thucdon_gia)*Integer.parseInt(hd.soluong));
                 }
             }
 
@@ -309,7 +292,7 @@ public class ProductStatisticActivity extends AppCompatActivity {
         if(rdMax.isChecked() == true){
             Collections.reverse(alProduct);
         }
-
+        return alProduct;
     }
 
 

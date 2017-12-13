@@ -3,19 +3,27 @@ package com.example.dellcorei3.storemanagement.employee;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dellcorei3.storemanagement.MainActivity;
 import com.example.dellcorei3.storemanagement.R;
 import com.example.dellcorei3.storemanagement.employee.CustomListview.CT_hoadonAdapter;
 import com.example.dellcorei3.storemanagement.employee.JavaClass.Ban;
@@ -46,14 +54,18 @@ public class Main_lauout_Bill extends Activity {
     DatabaseReference mdata;
 
     Spinner spinnerID;
-    ArrayList<Show_hoadon> arrayshowhoadon;
+    Switch switchDisplay;
+    TextView tvStatusConnection;
+
+    ArrayList<Show_hoadon> arrayshowhoadon,arrHDEmp;
     ArrayList<Nhan_vien> arrayListNV;
     Hoadon hoadon;
     Show_hoadon show_hoadon;
     Nhan_vien nhan_vien;
 
-    TextView  txt_ngay,txt_gio;
-    String setkey,laykey,keyresult;
+    String setkey,laykey;
+    String employeeID;
+    int notificationId=0;
     Bundle bundle;
     boolean isswap=false;
 
@@ -75,10 +87,33 @@ public class Main_lauout_Bill extends Activity {
         setContentView(R.layout.activity_main_lauout__bill);
 
         thamchieu();
+        switchDisplay.setChecked(true);
 
         mdata = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
+        // kiểm tra trạng thái kết nối internet
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if(connected) {
+                    Toast.makeText(Main_lauout_Bill.this, "Đã kết nối",
+                            Toast.LENGTH_SHORT).show();
+                    tvStatusConnection.setVisibility(View.INVISIBLE);
+                }else{
+                    tvStatusConnection.setVisibility(View.VISIBLE);
+                    Toast.makeText(Main_lauout_Bill.this, "Mất kết nối",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                System.err.println("Listener was cancelled");
+            }
+        });
 
 
 //        adapter = new CT_hoadonAdapter(Main_lauout_Bill.this,R.layout.custom_listview,arrayshowhoadon);
@@ -95,7 +130,23 @@ public class Main_lauout_Bill extends Activity {
         clicklistview();
         longclicklistview();
 
+        // sự kiện thay đổi switch
+        switchDisplay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // nếu chưa đọc xong dữ liệu
+                if(arrHDEmp.size() == 0 || arrayshowhoadon.size() == 0){
+                    return;
+                }
 
+                if(isChecked==true){
+                    showData(arrayshowhoadon);
+                }
+                else{
+                    showData(arrHDEmp);
+                }
+            }
+        });
     }
 
 
@@ -105,7 +156,6 @@ public class Main_lauout_Bill extends Activity {
             bt_taohoadon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     dialog = new Dialog(Main_lauout_Bill.this,R.style.Dialog);
                     dialog.setTitle("Tạo Hóa Đơn");
                     dialog.setCancelable(false);
@@ -209,20 +259,42 @@ public class Main_lauout_Bill extends Activity {
         bt_taohoadon = (Button)findViewById(R.id.bt_id_taohd);
         bt_huy = (Button)findViewById(R.id.bt_id_tab2_huy);
         bt_them = (Button)findViewById(R.id.bt_id_tab2_them);
-
+        switchDisplay = (Switch)findViewById(R.id.switch1);
+        tvStatusConnection = (TextView)findViewById(R.id.tvStatusConnection);
+        tvStatusConnection.setVisibility(View.INVISIBLE);
 
 //        data = new ArrayList<CT_hoadon>();
         arrayBan = new ArrayList();
         arrayshowban = new ArrayList<Ban>();
         arrayspinnerban = new ArrayList<>();
         arrayshowhoadon = new ArrayList<Show_hoadon>();
+        arrHDEmp = new ArrayList<Show_hoadon>();
         arrayListNV = new ArrayList<Nhan_vien>();
         show_hoadon = new Show_hoadon();
         bundle = getIntent().getExtras();
 
     }
 
+    private void pushNotifications(String ban,String nv){
+        notificationId++;
+        Intent intent = new Intent();
+        PendingIntent pIntent = PendingIntent.getActivity(Main_lauout_Bill.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        NotificationCompat.Builder b = new NotificationCompat.Builder(Main_lauout_Bill.this);
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.icon)
+                .setTicker("notification")
+                .setContentTitle(ban)
+                .setContentText("Đã chuẩn bị xong!")
+                .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
+                .setContentIntent(pIntent)
+                .setContentInfo(nv);
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId, b.build());
+    }
 
     //doc firebase
     private void firebasedata() {
@@ -285,20 +357,26 @@ public class Main_lauout_Bill extends Activity {
                 }
             });
         }
+
+        Bundle b = getIntent().getExtras();
+        final String myEmail = b.get("email").toString();
         // kiểm tra tài khoản nhân vien
         mdata.child("nhanvien").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Nhanvien_checkin nv = dataSnapshot.getValue(Nhanvien_checkin.class);
 
+                if(nv.email.equals(myEmail)==true){
+                    employeeID=dataSnapshot.getKey();
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Nhanvien_checkin nv = dataSnapshot.getValue(Nhanvien_checkin.class);
-                Bundle b = getIntent().getExtras();
-                if(nv.email.equals(b.get("email"))==true){
+
+                if(nv.email.equals(myEmail)==true){
                     if(nv.state == 0){
-                        Log.d("chua",mAuth.getCurrentUser().toString());
                         FirebaseAuth.getInstance().signOut();
                         Toast.makeText(Main_lauout_Bill.this,"Tài khoản của bạn đã bị khóa",Toast.LENGTH_LONG).show();
                     }
@@ -387,19 +465,19 @@ public class Main_lauout_Bill extends Activity {
                 show_hoadon = dataSnapshot.getValue(Show_hoadon.class);
                 show_hoadon.key = dataSnapshot.getKey();
 
-                        for (int i = 0; i < arrayshowban.size(); i++) {
-                            if (show_hoadon.ban.equals(arrayshowban.get(i).key)) {
-                                show_hoadon.ten = arrayshowban.get(i).tenban;
-                            }
-                        }
-                        for (int j = 0; j < arrayListNV.size(); j++) {
-                            if (show_hoadon.nhanvien_id.equals(arrayListNV.get(j).key)) {
-                                show_hoadon.tennv = arrayListNV.get(j).lastName;
-                            }
-                        }
-                    if (!show_hoadon.trangthai.equals("dathanhtoan")){
-                    createdataDislayhoadon();
+                for (int i = 0; i < arrayshowban.size(); i++) {
+                    if (show_hoadon.ban.equals(arrayshowban.get(i).key)) {
+                        show_hoadon.ten = arrayshowban.get(i).tenban;
                     }
+                }
+                for (int j = 0; j < arrayListNV.size(); j++) {
+                    if (show_hoadon.nhanvien_id.equals(arrayListNV.get(j).key)) {
+                        show_hoadon.tennv = arrayListNV.get(j).lastName;
+                    }
+                }
+                if (!show_hoadon.trangthai.equals("dathanhtoan")) {
+                    createdataDislayhoadon(show_hoadon.nhanvien_id);
+                }
 
 
             }
@@ -408,42 +486,72 @@ public class Main_lauout_Bill extends Activity {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Show_hoadon hd = dataSnapshot.getValue(Show_hoadon.class);
                 hd.key = dataSnapshot.getKey();
+                // mảng chứa tất cả hóa đơn
+                for (int i = 0; i < arrayshowhoadon.size(); i++) {
+                    if (arrayshowhoadon.get(i).key.equals(dataSnapshot.getKey())) {
+                        if (!hd.trangthai.equals("dathanhtoan")) {
 
-                        for (int i = 0; i < arrayshowhoadon.size(); i++) {
-
-                            if (arrayshowhoadon.get(i).key.equals(dataSnapshot.getKey())) {
-                                if (!hd.trangthai.equals("dathanhtoan")) {
-
-                                    for (int j = 0; j < arrayBan.size(); j++) {
-                                        if (hd.ban.equals(arrayBan.get(j).key)) {
-                                            hd.ten = arrayBan.get(j).tenban;
-                                        }
-                                    }
-                                    for (int j = 0; j < arrayListNV.size(); j++) {
-                                        if (hd.nhanvien_id.equals(arrayListNV.get(j).key)) {
-                                            hd.tennv = arrayListNV.get(j).lastName;
-                                        }
-                                    }
-                                    arrayshowhoadon.set(i, hd);
-                                    adapter.notifyDataSetChanged();
-                                }
-                                else{
-                                    arrayshowhoadon.remove(i);
-                                    adapter.notifyDataSetChanged();
+                            for (int j = 0; j < arrayBan.size(); j++) {
+                                if (hd.ban.equals(arrayBan.get(j).key)) {
+                                    hd.ten = arrayBan.get(j).tenban;
                                 }
                             }
-
+                            for (int j = 0; j < arrayListNV.size(); j++) {
+                                if (hd.nhanvien_id.equals(arrayListNV.get(j).key)) {
+                                    hd.tennv = arrayListNV.get(j).lastName;
+                                }
+                            }
+                            arrayshowhoadon.set(i, hd);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            arrayshowhoadon.remove(i);
+                            adapter.notifyDataSetChanged();
                         }
-
+                    }
+                }
+                // mảng chứa hóa đơn của user
+                for (int i = 0; i < arrHDEmp.size(); i++) {
+                    if (arrHDEmp.get(i).key.equals(dataSnapshot.getKey())) {
+                        if (!hd.trangthai.equals("dathanhtoan")) {
+                            for (int j = 0; j < arrayBan.size(); j++) {
+                                if (hd.ban.equals(arrayBan.get(j).key)) {
+                                    hd.ten = arrayBan.get(j).tenban;
+                                }
+                            }
+                            for (int j = 0; j < arrayListNV.size(); j++) {
+                                if (hd.nhanvien_id.equals(arrayListNV.get(j).key)) {
+                                    hd.tennv = arrayListNV.get(j).lastName;
+                                }
+                            }
+                            // push notification khi hóa đơn đã chuẩn bị xong
+                            if(hd.trangthai.equals("phucvu")){
+                                pushNotifications(hd.ten,hd.tennv);
+                            }
+                            arrHDEmp.set(i, hd);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            arrHDEmp.remove(i);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
             }
 //
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Show_hoadon hd = dataSnapshot.getValue(Show_hoadon.class);
                 hd.key = dataSnapshot.getKey();
+                // mảng chứa tất cả hóa đơn
                 for (int i = 0; i < arrayshowhoadon.size(); i++) {
                     if (arrayshowhoadon.get(i).key.equals(dataSnapshot.getKey())) {
                         arrayshowhoadon.remove(i);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+                // mảng chứa hóa đơn của user
+                for (int i = 0; i < arrHDEmp.size(); i++) {
+                    if (arrHDEmp.get(i).key.equals(dataSnapshot.getKey())) {
+                        arrHDEmp.remove(i);
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -465,7 +573,12 @@ public class Main_lauout_Bill extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String positionkey = arrayshowhoadon.get(position).key;
+                String positionkey = "";
+                if(switchDisplay.isChecked() == true) {
+                    positionkey = arrayshowhoadon.get(position).key;
+                }else{
+                    positionkey = arrHDEmp.get(position).key;
+                }
 
                 Intent i = new Intent(Main_lauout_Bill.this,Main_Layout_Bill_2.class);
                 i.putExtra("positionkey",positionkey);
@@ -482,8 +595,18 @@ public class Main_lauout_Bill extends Activity {
             lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    final String positionkeyban = arrayshowhoadon.get(position).ban;
-                    final String positionkeyhd = arrayshowhoadon.get(position).key;
+                    final String positionkeyban;
+                    final String positionkeyhd;
+
+                    if(switchDisplay.isChecked() == true){
+                        positionkeyban = arrayshowhoadon.get(position).ban;
+                        positionkeyhd = arrayshowhoadon.get(position).key;
+                    }else{
+                        positionkeyban = arrHDEmp.get(position).ban;
+                        positionkeyhd = arrHDEmp.get(position).key;
+
+                    }
+
 
                     dialog = new Dialog(Main_lauout_Bill.this,R.style.Dialog);
                     dialog.setTitle("Đổi Vị Trí");
@@ -526,12 +649,14 @@ public class Main_lauout_Bill extends Activity {
                                 Toast.makeText(Main_lauout_Bill.this,"Vui lòng chọn bàn muốn đổi",Toast.LENGTH_LONG).show();
                             }else
                             {
+                                String innerKeyBan=positionkeyban;
+                                String innerKeyHD=positionkeyhd;
+
                                 keyban = banDaChon.key.toString();
-                                Log.d("keyban", keyban);
                                 mdata.child("ban").child(keyban).child("choose").setValue("1");
-                                mdata.child("ban").child(positionkeyban).child("choose").removeValue();
-                                mdata.child("Hoadon").child(positionkeyhd).child("ban_cu").setValue(positionkeyban);
-                                mdata.child("Hoadon").child(positionkeyhd).child("ban").setValue(keyban);
+                                mdata.child("ban").child(innerKeyBan).child("choose").removeValue();
+                                mdata.child("Hoadon").child(innerKeyHD).child("ban_cu").setValue(positionkeyban);
+                                mdata.child("Hoadon").child(innerKeyHD).child("ban").setValue(keyban);
 
 
                                 dialog.dismiss();
@@ -554,14 +679,27 @@ public class Main_lauout_Bill extends Activity {
         }
     }
 
-
-    //show data hoadon
-    private void createdataDislayhoadon(){
-
-        arrayshowhoadon.add(new Show_hoadon(show_hoadon.ten,show_hoadon.tennv,show_hoadon.trangthai,show_hoadon.key,show_hoadon.ban));
-        adapter = new CT_hoadonAdapter(Main_lauout_Bill.this,R.layout.custom_listview,arrayshowhoadon);
+    private void showData(ArrayList<Show_hoadon> al){
+        adapter = new CT_hoadonAdapter(Main_lauout_Bill.this, R.layout.custom_listview, al);
         lv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    //show data hoadon
+    private void createdataDislayhoadon(String nhanvienID){
+
+        if(nhanvienID.equals(employeeID)){
+            arrHDEmp.add(new Show_hoadon(show_hoadon.ten,show_hoadon.tennv,show_hoadon.trangthai,show_hoadon.key,show_hoadon.ban));
+        }
+        arrayshowhoadon.add(new Show_hoadon(show_hoadon.ten,show_hoadon.tennv,show_hoadon.trangthai,show_hoadon.key,show_hoadon.ban));
+        // nếu switch chọn hiển thị tất cả
+        if(switchDisplay.isChecked() == true) {
+            showData(arrayshowhoadon);
+        }
+        else{
+            showData(arrHDEmp);
+        }
+
     }
 
 

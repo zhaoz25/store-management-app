@@ -18,6 +18,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dellcorei3.storemanagement.MainActivity;
 import com.example.dellcorei3.storemanagement.R;
 import com.example.dellcorei3.storemanagement.employee.CustomListview.CT_Hoadon_chitiet_layout_2;
 import com.example.dellcorei3.storemanagement.employee.CustomListview.CT_hoadonAdapter_LayoutBill_2;
@@ -25,6 +26,7 @@ import com.example.dellcorei3.storemanagement.employee.CustomListview.CT_hoadon_
 import com.example.dellcorei3.storemanagement.employee.CustomListview.CT_hoadon_layout_2;
 import com.example.dellcorei3.storemanagement.employee.Firebase.Menu;
 import com.example.dellcorei3.storemanagement.employee.Firebase.Nhom_thucdon;
+import com.example.dellcorei3.storemanagement.employee.JavaClass.Hoadon;
 import com.example.dellcorei3.storemanagement.employee.JavaClass.Hoadon_chitiet;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -57,6 +59,7 @@ public class Main_Layout_Bill_2 extends Activity {
     int soluong = 1;
     String xoa,tongtien;
     String  tenmonan;
+    boolean isRemove=true;
 
     Bundle bundle;
     TabHost tab;
@@ -94,7 +97,7 @@ public class Main_Layout_Bill_2 extends Activity {
         clicklistview();
         longclicklistview();
         searchname();
-
+        getStateHD();
 //        mdata.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
@@ -165,8 +168,6 @@ public class Main_Layout_Bill_2 extends Activity {
         contronbutton();
 
     }
-
-
 
     //xu kien cac button
     private void contronbutton(){
@@ -276,7 +277,51 @@ public class Main_Layout_Bill_2 extends Activity {
         });
     }
 
+    private void getStateHD(){
+        String key = bundle.getString("positionkey");
+        if(key == null){
+            return;
+        }
 
+        mdata.child("Hoadon").child(key).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getKey().equals("trangthai")) {
+                    if (dataSnapshot.getValue().equals("chuaphucvu") == true || dataSnapshot.getValue().equals("") == true) {
+                        isRemove = true;
+                    } else {
+                        isRemove = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getKey().equals("trangthai")) {
+                    if (dataSnapshot.getValue().equals("chuaphucvu") == true || dataSnapshot.getValue().equals("") == true) {
+                        isRemove = true;
+                    } else {
+                        isRemove = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
 
@@ -387,14 +432,10 @@ public class Main_Layout_Bill_2 extends Activity {
                     }
 
                     createdata_Tab2();
-                    //xoa 1 mon khi long click
-
-
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
                 }
 
                 @Override
@@ -408,10 +449,7 @@ public class Main_Layout_Bill_2 extends Activity {
 
                         }
                     }
-
-
                 }
-
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
@@ -423,9 +461,6 @@ public class Main_Layout_Bill_2 extends Activity {
                 }
             });
         }
-
-
-
     }
 
     private void getHD(){
@@ -466,7 +501,6 @@ public class Main_Layout_Bill_2 extends Activity {
         });
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
 
@@ -478,9 +512,6 @@ public class Main_Layout_Bill_2 extends Activity {
 
     //search
     private void searchname(){
-
-
-
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -650,26 +681,32 @@ public class Main_Layout_Bill_2 extends Activity {
                 builder.setMessage("Bạn có muốn xóa món đã chọn").setCancelable(false).setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                      if (keyshowhoadon == null) {
-                          mdata.child(Namehoadonchitiet).child(getkey).child(xoa).removeValue();
+                        // nếu hóa đơn chưa phục vụ mới đc xóa
+                        if(isRemove==true) {
+                            if (keyshowhoadon == null) {
+                                mdata.child(Namehoadonchitiet).child(getkey).child(xoa).removeValue();
 
-                          tongconlai = tong;
-                          tongconlai -= Float.parseFloat(data_chitiet.get(position).gia) * Float.parseFloat(data_chitiet.get(position).soluong);
-                          tong = tongconlai;
-                          tongtien = String.valueOf(tong);
-                          tongsl -= Integer.parseInt(data_chitiet.get(position).soluong);
-                          txt_tong.setText(decimalFormat.format(tong) + " VND");
-                      }else {
-                          mdata.child(Namehoadonchitiet).child(keyshowhoadon).child(xoa).removeValue();
+                                tongconlai = tong;
+                                tongconlai -= Float.parseFloat(data_chitiet.get(position).gia) * Float.parseFloat(data_chitiet.get(position).soluong);
+                                tong = tongconlai;
+                                tongtien = String.valueOf(tong);
+                                tongsl -= Integer.parseInt(data_chitiet.get(position).soluong);
+                                txt_tong.setText(decimalFormat.format(tong) + " VND");
+                            } else {
+                                mdata.child(Namehoadonchitiet).child(keyshowhoadon).child(xoa).removeValue();
 
-                          tongconlai = tong;
-                          tongconlai -= Float.parseFloat(data_chitiet.get(position).gia) * Float.parseFloat(data_chitiet.get(position).soluong);
-                          tong = tongconlai;
-                          tongtien = String.valueOf(tong);
-                          tongsl -= Integer.parseInt(data_chitiet.get(position).soluong);
-                          txt_tong.setText(decimalFormat.format(tong) + " VND");
-                      }
-
+                                tongconlai = tong;
+                                tongconlai -= Float.parseFloat(data_chitiet.get(position).gia) * Float.parseFloat(data_chitiet.get(position).soluong);
+                                tong = tongconlai;
+                                tongtien = String.valueOf(tong);
+                                tongsl -= Integer.parseInt(data_chitiet.get(position).soluong);
+                                txt_tong.setText(decimalFormat.format(tong) + " VND");
+                            }
+                        }
+                        else{
+                            Toast.makeText(Main_Layout_Bill_2.this, "Thực đơn đã phục vụ không thể xóa.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
 
                     }

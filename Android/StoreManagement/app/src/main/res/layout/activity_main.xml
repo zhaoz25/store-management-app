@@ -4,20 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fa40958c"
+    android:background="#faabe9e3"
     android:orientation="vertical"
     android:weightSum="1"
     tools:context="com.example.dellcorei3.storemanagement.MainActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center_horizontal"
-        android:text="Don't wait. Login now!"
-        android:textColor="@android:color/background_light"
-        android:textSize="22dp" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="140dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@drawable/icon2" />
 
     <EditText
         android:id="@+id/etEmail"
@@ -63,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Nhân viên"
-            android:textColor="@android:color/background_light"
+            android:textColor="@android:color/background_dark"
             android:textSize="16sp" />
 
         <RadioButton
@@ -72,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Chủ cửa hàng"
-            android:textColor="@android:color/background_light"
+            android:textColor="@android:color/background_dark"
             android:textSize="16sp" />
     </RadioGroup>
 
@@ -83,7 +80,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
         android:text="Lưu mật khẩu"
-        android:textColor="@android:color/background_light"
+        android:textColor="@android:color/background_dark"
         android:textSize="16sp" />
 
     <RelativeLayout
@@ -99,10 +96,25 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:background="#20766c"
+            android:background="#2ca395"
             android:text="ĐĂNG NHẬP"
             android:textColor="@android:color/background_light"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvForgotPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerInParent="false"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:text="Quên mật khẩu"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"
+            android:textStyle="italic" />
     </RelativeLayout>
 
 </LinearLayout>

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dellcorei3.storemanagement.employee.LonginAndCheckin.CheckinActivity;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     Button btLogIn;
     CheckBox cbSave;
     RadioButton rdEmployee,rdManger;
+    TextView tvForgotPassword;
 
     private FirebaseAuth mAuth;
     private DatabaseReference myDatabase;
@@ -104,6 +106,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it=new Intent(MainActivity.this,ForgotPasswordActivity.class);
+                startActivity(it);
+            }
+        });
         /*
         SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String s = sfd.format(new Date(Long.parseLong("1505745885382")));*/
@@ -115,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     private void addControls(){
         etEmail = (EditText)findViewById(R.id.etEmail);
         etPass = (EditText)findViewById(R.id.etPass);
+        tvForgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
         btLogIn = (Button)findViewById(R.id.btLogIn);
 
         cbSave = (CheckBox)findViewById(R.id.cbSave);

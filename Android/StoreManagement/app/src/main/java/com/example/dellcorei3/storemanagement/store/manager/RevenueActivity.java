@@ -220,8 +220,6 @@ public class RevenueActivity extends AppCompatActivity implements FragmentSendAc
                         @Override
                         public void onClick(View v) {
                             createTimePickerDialog(etTo);
-
-
                         }
                     });
                     // sự kiện thay đổi edittext
@@ -329,7 +327,6 @@ public class RevenueActivity extends AppCompatActivity implements FragmentSendAc
                         Toast.makeText(getContext(), "Xóa thành công",
                                 Toast.LENGTH_SHORT).show();
 
-
                         return true;
                     default:
                         return super.onContextItemSelected(item);
@@ -376,7 +373,7 @@ public class RevenueActivity extends AppCompatActivity implements FragmentSendAc
                             alHoaDon.add(hd);
 
                         }
-                        //sắp xếp mảng hoadon
+                        //sắp xếp mảng hoadon, đã thanh toán ở trên
                         sort();
                         adapterHD = new HoaDonAdapter(getContext(),R.layout.listview_hoadon,alHoaDon);
                         lvRevenue.setAdapter(adapterHD);
